@@ -2,7 +2,6 @@
 
 `wagorf` Implements the WhatsApp Web API using [Fiber](https://github.com/gofiber/fiber) web framework,
 and also [Swag](https://github.com/gofiber/fiber) to generate Swagger Documentation (2.0).
-<br>This repository contains example of implementation [Rhymen/go-whatsapp](https://github.com/Rhymen/go-whatsapp) package.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on docker container and on your local machine.
