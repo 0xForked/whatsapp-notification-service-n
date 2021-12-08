@@ -1,0 +1,19 @@
+# Files
+.dockerignore
+.editorconfig
+.gitignore
+run.sh
+docker-compose.yml
+Dockerfile
+Makefile
+LICENSE
+**/*.md
+**/*_test.go
+**/*.out
+**/*.gob
+# Folders
+.git/
+.github/
+build/
+.idea/
+dto/
