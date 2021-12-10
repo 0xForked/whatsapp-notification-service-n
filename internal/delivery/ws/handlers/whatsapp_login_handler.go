@@ -11,13 +11,13 @@ import (
 
 // ExampleHandler represent the http handler for example
 type whatsappLoginWSHandler struct {
-	waService  domain.WhatsappServiceContact
+	waService  domain.WhatsappServiceContract
 	wsUpgrader websocket.Upgrader
 }
 
 func NewWhatsappLoginWSHandler(
 	router *gin.Engine,
-	waService domain.WhatsappServiceContact,
+	waService domain.WhatsappServiceContract,
 ) {
 	handler := &whatsappLoginWSHandler{
 		wsUpgrader: websocket.Upgrader{

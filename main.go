@@ -18,6 +18,50 @@ import (
 )
 
 func init() {
+	loadEnv()
+}
+
+// @title WhatsApp Web API with Golang
+// @version 1.0
+// @description Golang, Gin, Whatsapp Web API and Swagger.
+// @termsOfService http://swagger.io/terms/
+// @contact.name @developer.gowa
+// @contact.email hello@aasumitro.id
+// @BasePath /
+func main() {
+	// sets the maximum number of CPUs that can be executing
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	// set server mode
+	gin.SetMode(os.Getenv("SERVER_ENV"))
+	// Creates a gin router with default middleware:
+	// logger and recovery (crash-free) middleware
+	appEngine := gin.Default()
+	//whatsapp web client
+	waClient := newWhatsappClient()
+
+	// swagger info base path
+	docs.SwaggerInfo.BasePath = appEngine.BasePath()
+
+	// initialize ws handler
+	wsHandlers.NewWhatsappLoginWSHandler(appEngine, waClient)
+
+	// initialize home http handler
+	httpHandlers.NewHomeHttpHandler(appEngine)
+	// register custom middleware
+	httpMiddleware := middlewares.InitHttpMiddleware()
+	appEngine.Use(
+		//	httpMiddleware.CORS(),
+		//	httpMiddleware.EntitySizeAllowed(),
+		httpMiddleware.WhatsappSession(waClient),
+	)
+	// initialize whatsapp http handler
+	httpHandlers.NewWhatsappMessageHttpHandler(appEngine, waClient)
+
+	// Running the server
+	log.Fatal(appEngine.Run(os.Getenv("SERVER_URL")))
+}
+
+func loadEnv() {
 	if os.Getenv("SERVER_SHORT_NAME") == "" {
 		exitF("SERVER_SHORT_NAME env is required")
 	}
@@ -53,47 +97,7 @@ func init() {
 	}
 }
 
-// @title WhatsApp Web API with Golang
-// @version 1.0
-// @description Golang, Gin, Whatsapp Web API and Swagger.
-// @termsOfService http://swagger.io/terms/
-// @contact.name @developer.gowa
-// @contact.email hello@aasumitro.id
-// @BasePath /
-func main() {
-	// sets the maximum number of CPUs that can be executing
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	// set server mode
-	gin.SetMode(os.Getenv("SERVER_ENV"))
-	// Creates a gin router with default middleware:
-	// logger and recovery (crash-free) middleware
-	appEngine := gin.Default()
-	//whatsapp web client
-	waClient := newWhatsappClient()
-
-	// swagger info base path
-	docs.SwaggerInfo.BasePath = appEngine.BasePath()
-
-	// initialize ws handler
-	wsHandlers.NewWhatsappLoginWSHandler(appEngine, waClient)
-
-	// initialize home http handler
-	httpHandlers.NewHomeHttpHandler(appEngine)
-	// register custom middleware
-	httpMiddleware := middlewares.InitHttpMiddleware()
-	appEngine.Use(
-		httpMiddleware.CORS(),
-		httpMiddleware.Auth(),
-		httpMiddleware.EntitySizeAllowed(),
-	)
-	// initialize whatsapp http handler
-	httpHandlers.NewWhatsappMessageHttpHandler(appEngine)
-
-	// Running the server
-	log.Fatal(appEngine.Run(os.Getenv("SERVER_URL")))
-}
-
-func newWhatsappClient() domain.WhatsappServiceContact {
+func newWhatsappClient() domain.WhatsappServiceContract {
 	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         20 * time.Second,
 		ShortClientName: os.Getenv("SERVER_SHORT_NAME"),
