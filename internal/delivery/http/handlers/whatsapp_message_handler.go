@@ -14,10 +14,6 @@ func NewWhatsappMessageHttpHandler(
 	//v1.GET("/api", handler.home)
 }
 
-func (handler whatsappMessageHTTPHandler) Info(context *gin.Context) {
-	// TODO
-}
-
 func (handler whatsappMessageHTTPHandler) SendText(context *gin.Context) {
 	// TODO
 }
@@ -39,9 +35,5 @@ func (handler whatsappMessageHTTPHandler) SendDocument(context *gin.Context) {
 }
 
 func (handler whatsappMessageHTTPHandler) Groups(context *gin.Context) {
-	// TODO
-}
-
-func (handler whatsappMessageHTTPHandler) Logout(context *gin.Context) {
 	// TODO
 }

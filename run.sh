@@ -1,8 +1,11 @@
 # Environment settings:
+export SERVER_SHORT_NAME="GOWA v1.0"
+export SERVER_LONG_NAME="Whatsapp Web API with Golang"
 export SERVER_URL="0.0.0.0:8080"
 # debug | release
 export SERVER_ENV="debug"
 export SERVER_READ_TIMEOUT=60
+export SERVER_UPLOAD_LIMIT=1
 ## JWT Configuration
 export JWT_SECRET_KEY="GOWA_JWT_SECRET:base64(string):amNjx+OkIltCJU3aTYhO3A=="
 export JWT_SECRET_KEY_EXPIRE_MINUTES=15
