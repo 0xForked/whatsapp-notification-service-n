@@ -1,7 +1,8 @@
 package domain
 
-// WhatsappService represent the whatsapp's use cases
-type WhatsappService interface {
+// WhatsappServiceContact WhatsappService represent the whatsapp's use cases
+type WhatsappServiceContact interface {
+	Login(vMajor, vMinor, vBuild, timeout, reconnect int, clientNameShort, clientNameLong string) (qr string, err error)
 	RestoreSession() error
 	GetInfo() (info WhatsappWeb, err error)
 	SendText(form WhatsappSendTextForm) (msgId string, err error)
@@ -10,5 +11,3 @@ type WhatsappService interface {
 	Logout() (err error)
 	Groups(jid string) (g string, err error)
 }
-
-//Login(vMajor, vMinor, vBuild, timeout, reconnect int, clientNameShort, clientNameLong string) (qrCode string, err error)

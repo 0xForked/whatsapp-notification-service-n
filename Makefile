@@ -2,6 +2,7 @@
 
 SERVER_PORT = 8080
 SERVER_URL = "0.0.0.0:$(SERVER_PORT)"
+SERVER_ENV = "release"
 SERVER_READ_TIMEOUT = 60
 JWT_SECRET_KEY = "GOWA_JWT_SECRET:base64(string):amNjx+OkIltCJU3aTYhO3A=="
 JWT_SECRET_KEY_EXPIRE_MINUTES = 15
@@ -30,6 +31,7 @@ docker_app: docker_build_image
         		--name gowa-c \
         		-p $(SERVER_PORT):$(SERVER_PORT) \
         		-e SERVER_URL=$(SERVER_URL) \
+        		-e SERVER_ENV=$(SERVER_ENV) \
         		-e SERVER_READ_TIMEOUT=$(SERVER_READ_TIMEOUT) \
         		-e JWT_SECRET_KEY=$(JWT_SECRET_KEY) \
         		-e JWT_SECRET_KEY_EXPIRE_MINUTES=$(JWT_SECRET_KEY_EXPIRE_MINUTES) \

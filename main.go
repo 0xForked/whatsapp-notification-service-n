@@ -15,6 +15,9 @@ func init() {
 	if os.Getenv("SERVER_URL") == "" {
 		exitF("SERVER_URL env is required")
 	}
+	if os.Getenv("SERVER_ENV") == "" {
+		exitF("SERVER_ENV env is required")
+	}
 	if os.Getenv("SERVER_READ_TIMEOUT") == "" {
 		exitF("SERVER_READ_TIMEOUT env is required")
 	}
@@ -38,16 +41,18 @@ func init() {
 	}
 }
 
-// @title WhatsApp API with Golang
+// @title WhatsApp Web API with Golang
 // @version 1.0
-// @description Golang, Gin, Whatsapp and Swagger docs in isolated Docker containers.
+// @description Golang, Gin, Whatsapp Web API and Swagger.
 // @termsOfService http://swagger.io/terms/
 // @contact.name @developer.gowa
 // @contact.email hello@aasumitro.id
-// @BasePath /api
+// @BasePath /
 func main() {
 	// sets the maximum number of CPUs that can be executing
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	// set server mode
+	gin.SetMode(os.Getenv("SERVER_ENV"))
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	appEngine := gin.Default()
@@ -55,13 +60,14 @@ func main() {
 	httpMiddleware := middlewares.InitHttpMiddleware()
 	// use custom middleware
 	appEngine.Use(httpMiddleware.CORS())
-	//
-	docs.SwaggerInfo.BasePath = "/api"
+	// swagger info base path
+	docs.SwaggerInfo.BasePath = appEngine.BasePath()
 	// initialize http handler
 	httpHandlers.NewHomeHttpHandler(appEngine)
 	appEngine.Use(httpMiddleware.Auth())
 	httpHandlers.NewWhatsappMessageHttpHandler(appEngine)
 	// initialize ws handler
+	// wsHandlers.NewWhatsappAuthenticationWsHandler()
 	// Running the server
 	log.Fatal(appEngine.Run(os.Getenv("SERVER_URL")))
 }

@@ -1,5 +1,7 @@
 # Environment settings:
 export SERVER_URL="0.0.0.0:8080"
+# debug | release
+export SERVER_ENV="debug"
 export SERVER_READ_TIMEOUT=60
 ## JWT Configuration
 export JWT_SECRET_KEY="GOWA_JWT_SECRET:base64(string):amNjx+OkIltCJU3aTYhO3A=="
