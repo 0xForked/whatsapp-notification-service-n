@@ -9,12 +9,6 @@ type Respond struct {
 	Data   interface{} `json:"data"`
 }
 
-// ErrorValidationRespond ErrorValidation
-type ErrorValidationRespond struct {
-	Field   string `json:"field" example:"username"`
-	Message string `json:"message" example:"username cannot empty"`
-}
-
 // NewHttpRespond NewHttpErrorRespond NewHttpError
 func NewHttpRespond(context *gin.Context, code int, status string, data interface{}) {
 	context.JSON(
