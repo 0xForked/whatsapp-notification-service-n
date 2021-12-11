@@ -5,7 +5,6 @@ import (
 	"github.com/Rhymen/go-whatsapp"
 	"github.com/aasumitro/gowa/docs"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/services"
@@ -17,8 +16,31 @@ import (
 	"time"
 )
 
+// ae stand for App Engine
+var ae *gin.Engine
+
+// wac stand for Whatsapp Client
+var wac domain.WhatsappServiceContract
+
 func init() {
-	loadEnv()
+	// sets the maximum number of CPUs that can be executing
+	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	// load environment variables
+	validateEnvironment()
+
+	// set server mode
+	gin.SetMode(os.Getenv("SERVER_ENV"))
+
+	// Creates a gin router with default middleware:
+	// logger and recovery (crash-free) middleware
+	ae = gin.Default()
+
+	// Create a new WhatsApp connection
+	wac = newWhatsappClient()
+
+	// swagger info base path
+	docs.SwaggerInfo.BasePath = ae.BasePath()
 }
 
 // @title WhatsApp Web API with Golang
@@ -29,39 +51,19 @@ func init() {
 // @contact.email hello@aasumitro.id
 // @BasePath /
 func main() {
-	// sets the maximum number of CPUs that can be executing
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	// set server mode
-	gin.SetMode(os.Getenv("SERVER_ENV"))
-	// Creates a gin router with default middleware:
-	// logger and recovery (crash-free) middleware
-	appEngine := gin.Default()
-	//whatsapp web client
-	waClient := newWhatsappClient()
-
-	// swagger info base path
-	docs.SwaggerInfo.BasePath = appEngine.BasePath()
-
 	// initialize ws handler
-	wsHandlers.NewWhatsappLoginWSHandler(appEngine, waClient)
+	wsHandlers.NewWhatsappLoginWSHandler(ae, wac)
 
 	// initialize home http handler
-	httpHandlers.NewHomeHttpHandler(appEngine)
-	// register custom middleware
-	httpMiddleware := middlewares.InitHttpMiddleware()
-	appEngine.Use(
-		//	httpMiddleware.CORS(),
-		//	httpMiddleware.EntitySizeAllowed(),
-		httpMiddleware.WhatsappSession(waClient),
-	)
+	httpHandlers.NewHomeHttpHandler(ae)
 	// initialize whatsapp http handler
-	httpHandlers.NewWhatsappMessageHttpHandler(appEngine, waClient)
+	httpHandlers.NewWhatsappMessageHttpHandler(ae, wac)
 
 	// Running the server
-	log.Fatal(appEngine.Run(os.Getenv("SERVER_URL")))
+	log.Fatal(ae.Run(os.Getenv("SERVER_URL")))
 }
 
-func loadEnv() {
+func validateEnvironment() {
 	if os.Getenv("SERVER_SHORT_NAME") == "" {
 		exitF("SERVER_SHORT_NAME env is required")
 	}
@@ -77,11 +79,8 @@ func loadEnv() {
 	if os.Getenv("SERVER_READ_TIMEOUT") == "" {
 		exitF("SERVER_READ_TIMEOUT env is required")
 	}
-	if os.Getenv("JWT_SECRET_KEY") == "" {
-		exitF("JWT_SECRET_KEY env is required")
-	}
-	if os.Getenv("JWT_SECRET_KEY_EXPIRE_MINUTES") == "" {
-		exitF("JWT_SECRET_KEY_EXPIRE_MINUTES env is required")
+	if os.Getenv("SERVER_UPLOAD_LIMIT") == "" {
+		exitF("SERVER_UPLOAD_LIMIT env is required")
 	}
 	if os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR") == "" {
 		exitF("WHATSAPP_CLIENT_VERSION_MAJOR env is required")
