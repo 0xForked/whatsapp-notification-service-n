@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	httpDelivery "github.com/aasumitro/gowa/internal/delivery/http"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
+	httpDelivery "github.com/aasumitro/gowa/internal/delivery"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -17,28 +16,18 @@ type whatsappMessageHTTPHandler struct {
 // @params *gin.Engine
 // @params domain.WhatsappServiceContract
 func NewWhatsappMessageHttpHandler(
-	router *gin.Engine,
+	router gin.IRoutes,
 	waService domain.WhatsappServiceContract,
 ) {
 	// Create a new handler and inject dependencies into it for use in the HTTP request handlers below.
 	handler := &whatsappMessageHTTPHandler{waService: waService}
 
-	// register custom middleware
-	httpMiddleware := middlewares.InitHttpMiddleware()
-	// create a new router group for the handler to register routes to and apply the middleware to it.
-	// The middleware will be applied to all the routes registered in this group.
-	v1 := router.Group("/api/v1/whatsapp").Use(
-		//	httpMiddleware.CORS(),
-		//	httpMiddleware.EntitySizeAllowed(),
-		httpMiddleware.WhatsappSession(handler.waService),
-	)
-
 	// whatsapp message routes registration here ...
-	v1.GET("/send-text", handler.sendText)
-	v1.GET("/send-location", handler.sendLocation)
-	v1.GET("/send-image", handler.sendImage)
-	v1.GET("/send-audio", handler.sendAudio)
-	v1.GET("/send-document", handler.sendDocument)
+	router.POST("/send-text", handler.sendText)
+	router.POST("/send-location", handler.sendLocation)
+	router.POST("/send-image", handler.sendImage)
+	router.POST("/send-audio", handler.sendAudio)
+	router.POST("/send-document", handler.sendDocument)
 }
 
 // sendText handler
@@ -46,7 +35,6 @@ func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 	httpDelivery.NewHttpRespond(
 		context,
 		http.StatusOK,
-		http.StatusText(http.StatusOK),
 		"Hello Text",
 	)
 }

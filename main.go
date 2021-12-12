@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
 	"github.com/aasumitro/gowa/docs"
+	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
+	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/services"
@@ -26,7 +28,7 @@ func init() {
 	// sets the maximum number of CPUs that can be executing
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	// load environment variables
+	// validate environment variables are set
 	validateEnvironment()
 
 	// set server mode
@@ -47,9 +49,15 @@ func init() {
 // @version 1.0
 // @description Golang, Gin, Whatsapp Web API and Swagger.
 // @termsOfService http://swagger.io/terms/
+
 // @contact.name @developer.gowa
+// @contact.url https://aasumitro.id/
 // @contact.email hello@aasumitro.id
-// @BasePath /
+
+// @BasePath /api/v1
+
+// @license.name  MIT
+// @license.url   https://github.com/aasumitro/gowa/blob/master/LICENSE
 func main() {
 	// initialize ws handler
 	wsHandlers.NewWhatsappLoginWSHandler(ae, wac)
@@ -57,7 +65,16 @@ func main() {
 	// initialize home http handler
 	httpHandlers.NewHomeHttpHandler(ae)
 	// initialize whatsapp http handler
-	httpHandlers.NewWhatsappMessageHttpHandler(ae, wac)
+	httpMiddleware := middlewares.InitHttpMiddleware()
+	// create a new router group for the handler to register routes to and apply the middleware to it.
+	// The middleware will be applied to all the routes registered in this group.
+	v1 := ae.Group("/api/v1/whatsapp").Use(
+		//	httpMiddleware.CORS(),
+		//	httpMiddleware.EntitySizeAllowed(),
+		httpMiddleware.WhatsappSession(wac),
+	)
+	httpHandlers.NewWhatsappAccountHttpHandler(v1, wac)
+	httpHandlers.NewWhatsappMessageHttpHandler(v1, wac)
 
 	// Running the server
 	log.Fatal(ae.Run(os.Getenv("SERVER_URL")))

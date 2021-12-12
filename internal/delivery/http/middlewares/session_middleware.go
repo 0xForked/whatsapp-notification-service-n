@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	httpDelivery "github.com/aasumitro/gowa/internal/delivery/http"
+	httpDelivery "github.com/aasumitro/gowa/internal/delivery"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,7 +13,6 @@ func (middleware HttpMiddleware) WhatsappSession(waService domain.WhatsappServic
 			httpDelivery.NewHttpRespond(
 				context,
 				http.StatusBadRequest,
-				http.StatusText(http.StatusBadRequest),
 				err.Error(),
 			)
 
