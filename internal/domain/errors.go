@@ -4,7 +4,7 @@ import "errors"
 
 var (
 	ErrAlreadyConnectedAndLoggedIn = errors.New("already connected & logged in")
-	ErrInvalidSession              = errors.New("invalid session, please logged in")
+	ErrInvalidSession              = errors.New("invalid session, service wasn't connected with your whatsapp")
 	ErrLoginInProgress             = errors.New("login or restore already running")
 	ErrNotConnected                = errors.New("not connected")
 	ErrInvalidWsData               = errors.New("received invalid data")
