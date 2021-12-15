@@ -1,11 +1,11 @@
-package domain
+package models
 
 import (
 	"encoding/json"
 	"mime/multipart"
 )
 
-var RequestWhatsappErrorMessage = map[string]string{
+var WhatsappValidationErrorMessage = map[string]string{
 	"error_required_msisdn":    "msisdn (mobile subscriber integrated services digital network number) is required",
 	"error_required_text":      "text message is required",
 	"error_required_latitude":  "latitude is required",

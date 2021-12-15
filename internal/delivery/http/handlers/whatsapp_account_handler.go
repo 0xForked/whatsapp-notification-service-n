@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"github.com/aasumitro/gowa/internal/delivery"
-	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // whatsappAccountHTTPHandler struct
 type whatsappAccountHTTPHandler struct {
-	waService domain.WhatsappServiceContract
+	waService contracts.WhatsappService
 }
 
 // NewWhatsappAccountHttpHandler constructor
@@ -17,7 +17,7 @@ type whatsappAccountHTTPHandler struct {
 // @params domain.WhatsappServiceContract
 func NewWhatsappAccountHttpHandler(
 	router gin.IRoutes,
-	waService domain.WhatsappServiceContract,
+	waService contracts.WhatsappService,
 ) {
 	// Create a new handler and inject dependencies into it for use in the HTTP request handlers below.
 	handler := &whatsappAccountHTTPHandler{waService: waService}

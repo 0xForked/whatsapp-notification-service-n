@@ -35,54 +35,39 @@ type HttpServerErrorRespond struct {
 
 // NewHttpRespond godoc
 func NewHttpRespond(context *gin.Context, code int, data interface{}) {
-	switch code {
-	case http.StatusInternalServerError:
-		context.JSON(
-			code,
-			HttpServerErrorRespond{
-				Code:   code,
-				Status: http.StatusText(code),
-				Data:   "something went wrong with the server",
-			},
-		)
-		break
-	case http.StatusBadRequest:
+	if code != http.StatusOK {
 		msg := func() string {
 			if data != nil {
 				return data.(string)
-			} else {
+			} else if code == http.StatusBadRequest {
 				return "something went wrong with the request"
+			} else if code == http.StatusUnprocessableEntity {
+				return "something went wrong with validation, all fields are required"
+			} else {
+				return "something went wrong with the server"
 			}
 		}()
 
 		context.JSON(
 			code,
-			HttpErrorRespond{
+			HttpServerErrorRespond{
 				Code:   code,
 				Status: http.StatusText(code),
 				Data:   msg,
 			},
 		)
-		break
-	case http.StatusUnprocessableEntity:
-		context.JSON(
-			code,
-			HttpValidationErrorRespond{
-				Code:   code,
-				Status: http.StatusText(code),
-				Data:   data,
-			},
-		)
-		break
-	default:
-		context.JSON(
-			code,
-			HttpSuccessRespond{
-				Code:   code,
-				Status: http.StatusText(code),
-				Data:   data,
-			},
-		)
-		break
+
+		return
 	}
+
+	context.JSON(
+		code,
+		HttpSuccessRespond{
+			Code:   code,
+			Status: http.StatusText(code),
+			Data:   data,
+		},
+	)
+
+	return
 }

@@ -2,14 +2,16 @@ package handlers
 
 import (
 	httpDelivery "github.com/aasumitro/gowa/internal/delivery"
-	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/domain/contracts"
+	"github.com/aasumitro/gowa/internal/domain/models"
+	"github.com/aasumitro/gowa/internal/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // WhatsappMessageHandler struct
 type whatsappMessageHTTPHandler struct {
-	waService domain.WhatsappServiceContract
+	waService contracts.WhatsappService
 }
 
 // NewWhatsappMessageHttpHandler constructor
@@ -17,7 +19,7 @@ type whatsappMessageHTTPHandler struct {
 // @params domain.WhatsappServiceContract
 func NewWhatsappMessageHttpHandler(
 	router gin.IRoutes,
-	waService domain.WhatsappServiceContract,
+	waService contracts.WhatsappService,
 ) {
 	// Create a new handler and inject dependencies into it for use in the HTTP request handlers below.
 	handler := &whatsappMessageHTTPHandler{waService: waService}
@@ -32,12 +34,11 @@ func NewWhatsappMessageHttpHandler(
 
 // sendText handler
 func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
-	var form domain.WhatsappSendTextForm
+	var form models.WhatsappSendTextForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
-		errs := ginError.ListAllErrors(form, err)
-		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -50,12 +51,11 @@ func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 
 // sendLocation handler
 func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
-	var form domain.WhatsappSendLocationForm
+	var form models.WhatsappSendLocationForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
-		errs := ginError.ListAllErrors(form, err)
-		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -64,12 +64,11 @@ func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
 
 // sendImage handler
 func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
-	var form domain.WhatsappSendFileForm
+	var form models.WhatsappSendFileForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
-		errs := ginError.ListAllErrors(form, err)
-		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -78,12 +77,11 @@ func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 
 // sendAudio handler
 func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
-	var form domain.WhatsappSendFileForm
+	var form models.WhatsappSendFileForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
-		errs := ginError.ListAllErrors(form, err)
-		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -92,12 +90,11 @@ func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 
 // sendDocument handler
 func (handler whatsappMessageHTTPHandler) sendDocument(context *gin.Context) {
-	var form domain.WhatsappSendFileForm
+	var form models.WhatsappSendFileForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
-		errs := ginError.ListAllErrors(form, err)
-		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
