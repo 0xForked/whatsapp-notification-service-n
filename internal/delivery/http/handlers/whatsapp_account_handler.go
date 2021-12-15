@@ -23,8 +23,13 @@ func NewWhatsappAccountHttpHandler(
 	handler := &whatsappAccountHTTPHandler{waService: waService}
 
 	// whatsapp message routes registration here ...
+	router.POST("/login", handler.login)
 	router.GET("/profile", handler.profile)
 	router.POST("/logout", handler.logout)
+}
+
+func (handler whatsappAccountHTTPHandler) login(context *gin.Context) {
+	// TODO: Implement the handler for the POST /login endpoint.
 }
 
 // profile godoc

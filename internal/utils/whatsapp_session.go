@@ -10,7 +10,7 @@ import (
 // WriteSession - Write/Store Whatsapp Session on temporary directory
 func WriteSession(session whatsapp.Session) error {
 	file, err := os.Create(
-		os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") +
+		os.Getenv("WAC_SESSION_PATH") +
 			"/whatsapp_session.gob")
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func WriteSession(session whatsapp.Session) error {
 func ReadSession() (whatsapp.Session, error) {
 	session := whatsapp.Session{}
 	file, err := os.Create(
-		os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") +
+		os.Getenv("WAC_SESSION_PATH") +
 			"/whatsapp_session.gob")
 	if err != nil {
 		return session, err
@@ -68,7 +68,7 @@ func LogoutSession(wac *whatsapp.Conn) error {
 		return err
 	}
 
-	_ = os.Remove(os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") +
+	_ = os.Remove(os.Getenv("WAC_SESSION_PATH") +
 		"/whatsapp_session.gob")
 
 	fmt.Println("Logout success..")

@@ -6,7 +6,6 @@ import (
 	"github.com/aasumitro/gowa/docs"
 	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/services"
@@ -65,13 +64,13 @@ func main() {
 	// initialize home http handler
 	httpHandlers.NewHomeHttpHandler(ae)
 	// initialize whatsapp http handler
-	httpMiddleware := middlewares.InitHttpMiddleware()
+	//httpMiddleware := middlewares.InitHttpMiddleware()
 	// create a new router group for the handler to register routes to and apply the middleware to it.
 	// The middleware will be applied to all the routes registered in this group.
 	v1 := ae.Group("/api/v1/whatsapp").Use(
-		//	httpMiddleware.CORS(),
-		//	httpMiddleware.EntitySizeAllowed(),
-		httpMiddleware.WhatsappSession(wac),
+	//	httpMiddleware.CORS(),
+	//	httpMiddleware.EntitySizeAllowed(),
+	//httpMiddleware.WhatsappSession(wac),
 	)
 	httpHandlers.NewWhatsappAccountHttpHandler(v1, wac)
 	httpHandlers.NewWhatsappMessageHttpHandler(v1, wac)
@@ -81,11 +80,11 @@ func main() {
 }
 
 func validateEnvironment() {
-	if os.Getenv("SERVER_SHORT_NAME") == "" {
-		exitF("SERVER_SHORT_NAME env is required")
+	if os.Getenv("SERVER_NAME") == "" {
+		exitF("SERVER_NAME env is required")
 	}
-	if os.Getenv("SERVER_LONG_NAME") == "" {
-		exitF("SERVER_LONG_NAME env is required")
+	if os.Getenv("SERVER_DESCRIPTION") == "" {
+		exitF("SERVER_DESCRIPTION env is required")
 	}
 	if os.Getenv("SERVER_URL") == "" {
 		exitF("SERVER_URL env is required")
@@ -99,44 +98,47 @@ func validateEnvironment() {
 	if os.Getenv("SERVER_UPLOAD_LIMIT") == "" {
 		exitF("SERVER_UPLOAD_LIMIT env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_MAJOR env is required")
+	if os.Getenv("WAC_MAJOR_VERSION") == "" {
+		exitF("WAC_MAJOR_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_MINOR") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_MINOR env is required")
+	if os.Getenv("WAC_MINOR_VERSION") == "" {
+		exitF("WAC_MINOR_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_BUILD") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_BUILD env is required")
+	if os.Getenv("WAC_BUILD_VERSION") == "" {
+		exitF("WAC_BUILD_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") == "" {
-		exitF("WHATSAPP_CLIENT_SESSION_PATH env is required")
+	if os.Getenv("WAC_SESSION_PATH") == "" {
+		exitF("WAC_SESSION_PATH env is required")
+	}
+	if os.Getenv("WAC_UPLOAD_PATH") == "" {
+		exitF("WAC_UPLOAD_PATH env is required")
 	}
 }
 
 func newWhatsappClient() domain.WhatsappServiceContract {
 	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         20 * time.Second,
-		ShortClientName: os.Getenv("SERVER_SHORT_NAME"),
-		LongClientName:  os.Getenv("SERVER_LONG_NAME"),
+		ShortClientName: os.Getenv("SERVER_NAME"),
+		LongClientName:  os.Getenv("SERVER_DESCRIPTION"),
 	})
 	if err != nil {
 		exitF("WhatsApp connection error: ", err)
 	}
 
 	waClientVerMajInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR"))
+		os.Getenv("WAC_MAJOR_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}
 
 	waClientVerMinInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_MINOR"))
+		os.Getenv("WAC_MINOR_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}
 
 	waClientVerBuildInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_BUILD"))
+		os.Getenv("WAC_BUILD_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}
@@ -147,7 +149,8 @@ func newWhatsappClient() domain.WhatsappServiceContract {
 		waClientVerBuildInt,
 	)
 
-	whatsappService := services.NewWhatsappService(wac)
+	//whatsappService := services.NewWhatsappService(wac)
+	whatsappService := services.WhatsappService{Conn: wac}
 
 	//Restore session if exists
 	err = whatsappService.RestoreSession()
@@ -155,7 +158,7 @@ func newWhatsappClient() domain.WhatsappServiceContract {
 		exitF("Error restoring whatsapp session. ", err)
 	}
 
-	return whatsappService
+	return &whatsappService
 }
 
 func exitF(s string, args ...interface{}) {

@@ -17,5 +17,10 @@ export SERVER_UPLOAD_LIMIT=1
 go mod tidy
 # Run Swagger
 swag init --parseDependency --parseInternal --parseDepth 1
-# Run app
-go run main.go
+# Build the app
+go build -o ./bin/build/app/gowa_"v${WAC_MAJOR_VERSION}.${WAC_MINOR_VERSION}.${WAC_BUILD_VERSION}" main.go
+# Copy needed folders
+cp -r ./storage ./bin/build/app/
+cp -r ./docs ./bin/build/app/
+# Run the app
+#./bin/build/app/gowa_"v${WAC_MAJOR_VERSION}.${WAC_MINOR_VERSION}.${WAC_BUILD_VERSION}"

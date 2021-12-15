@@ -5,28 +5,35 @@ import (
 	"mime/multipart"
 )
 
+var RequestWhatsappErrorMessage = map[string]string{
+	"error_required_msisdn":    "msisdn (mobile subscriber integrated services digital network number) is required",
+	"error_required_text":      "text message is required",
+	"error_required_latitude":  "latitude is required",
+	"error_required_longitude": "longitude is required",
+	"error_required_file":      "file is required",
+}
+
 type WhatsappSendTextForm struct {
-	Msisdn      string `json:"msisdn" validate:"required"`
-	Text        string `json:"text" validate:"required"`
-	MsgQuotedID string `json:"msg_quoted_id"`
-	MsgQuoted   string `json:"msg_quoted"`
+	Msisdn string `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
+	Text   string `json:"text" form:"text" validate:"required" binding:"required" msg:"error_required_text"`
+	//MsgQuotedID string `json:"msg_quoted_id" form:"msg_quoted_id"`
+	//MsgQuoted   string `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappSendLocationForm struct {
-	Msisdn      string  `json:"msisdn" validate:"required"`
-	Latitude    float64 `json:"latitude" validate:"required,latitude"`
-	Longitude   float64 `json:"longitude" validate:"required,longitude"`
-	MsgQuotedID string  `json:"msg_quoted_id"`
-	MsgQuoted   string  `json:"msg_quoted"`
+	Msisdn    string  `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
+	Latitude  float64 `json:"latitude" form:"latitude" validate:"required,latitude" binding:"required" msg:"error_required_latitude"`
+	Longitude float64 `json:"longitude" form:"longitude" validate:"required,longitude" binding:"required" msg:"error_required_longitude"`
+	//MsgQuotedID string  `json:"msg_quoted_id" form:"msg_quoted_id"`
+	//MsgQuoted   string  `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappSendFileForm struct {
-	Msisdn      string `json:"msisdn" validate:"required"`
-	MsgQuotedID string `json:"msg_quoted_id"`
-	MsgQuoted   string `json:"msg_quoted"`
-	Message     string `json:"message"`
-	File        string `json:"file" validate:"required,file"`
-	FileHeader  *multipart.FileHeader
+	Msisdn     string                `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
+	Message    string                `json:"message" form:"message"`
+	FileHeader *multipart.FileHeader `json:"file" form:"file" binding:"required" msg:"error_required_file"`
+	//MsgQuotedID string                `json:"msg_quoted_id" form:"msg_quoted_id"`
+	//MsgQuoted   string                `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappWebServer struct {
