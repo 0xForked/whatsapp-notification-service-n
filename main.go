@@ -81,11 +81,11 @@ func main() {
 }
 
 func validateEnvironment() {
-	if os.Getenv("SERVER_SHORT_NAME") == "" {
-		exitF("SERVER_SHORT_NAME env is required")
+	if os.Getenv("SERVER_NAME") == "" {
+		exitF("SERVER_NAME env is required")
 	}
-	if os.Getenv("SERVER_LONG_NAME") == "" {
-		exitF("SERVER_LONG_NAME env is required")
+	if os.Getenv("SERVER_DESCRIPTION") == "" {
+		exitF("SERVER_DESCRIPTION env is required")
 	}
 	if os.Getenv("SERVER_URL") == "" {
 		exitF("SERVER_URL env is required")
@@ -99,44 +99,47 @@ func validateEnvironment() {
 	if os.Getenv("SERVER_UPLOAD_LIMIT") == "" {
 		exitF("SERVER_UPLOAD_LIMIT env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_MAJOR env is required")
+	if os.Getenv("WAC_MAJOR_VERSION") == "" {
+		exitF("WAC_MAJOR_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_MINOR") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_MINOR env is required")
+	if os.Getenv("WAC_MINOR_VERSION") == "" {
+		exitF("WAC_MINOR_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_VERSION_BUILD") == "" {
-		exitF("WHATSAPP_CLIENT_VERSION_BUILD env is required")
+	if os.Getenv("WAC_BUILD_VERSION") == "" {
+		exitF("WAC_BUILD_VERSION env is required")
 	}
-	if os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") == "" {
-		exitF("WHATSAPP_CLIENT_SESSION_PATH env is required")
+	if os.Getenv("WAC_SESSION_PATH") == "" {
+		exitF("WAC_SESSION_PATH env is required")
+	}
+	if os.Getenv("WAC_UPLOAD_PATH") == "" {
+		exitF("WAC_UPLOAD_PATH env is required")
 	}
 }
 
 func newWhatsappClient() domain.WhatsappServiceContract {
 	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         20 * time.Second,
-		ShortClientName: os.Getenv("SERVER_SHORT_NAME"),
-		LongClientName:  os.Getenv("SERVER_LONG_NAME"),
+		ShortClientName: os.Getenv("SERVER_NAME"),
+		LongClientName:  os.Getenv("SERVER_DESCRIPTION"),
 	})
 	if err != nil {
 		exitF("WhatsApp connection error: ", err)
 	}
 
 	waClientVerMajInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR"))
+		os.Getenv("WAC_MAJOR_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}
 
 	waClientVerMinInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_MINOR"))
+		os.Getenv("WAC_MINOR_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}
 
 	waClientVerBuildInt, err := strconv.Atoi(
-		os.Getenv("WHATSAPP_CLIENT_VERSION_BUILD"))
+		os.Getenv("WAC_BUILD_VERSION"))
 	if err != nil {
 		exitF("Error conversion", err)
 	}

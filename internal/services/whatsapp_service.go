@@ -63,7 +63,7 @@ func (w *whatsappService) RestoreSession() error {
 		//restore session
 		session, err = w.whatsappConn.RestoreWithSession(session)
 		if err != nil {
-			_ = os.Remove(os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") +
+			_ = os.Remove(os.Getenv("WAC_SESSION_PATH") +
 				"/whatsapp_session.gob")
 			return err
 		}
