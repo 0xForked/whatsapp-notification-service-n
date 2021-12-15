@@ -47,12 +47,20 @@ func NewHttpRespond(context *gin.Context, code int, data interface{}) {
 		)
 		break
 	case http.StatusBadRequest:
+		msg := func() string {
+			if data != nil {
+				return data.(string)
+			} else {
+				return "something went wrong with the request"
+			}
+		}()
+
 		context.JSON(
 			code,
 			HttpErrorRespond{
 				Code:   code,
 				Status: http.StatusText(code),
-				Data:   "something went wrong with the request",
+				Data:   msg,
 			},
 		)
 		break

@@ -6,7 +6,6 @@ import (
 	"github.com/aasumitro/gowa/docs"
 	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/services"
@@ -65,13 +64,13 @@ func main() {
 	// initialize home http handler
 	httpHandlers.NewHomeHttpHandler(ae)
 	// initialize whatsapp http handler
-	httpMiddleware := middlewares.InitHttpMiddleware()
+	//httpMiddleware := middlewares.InitHttpMiddleware()
 	// create a new router group for the handler to register routes to and apply the middleware to it.
 	// The middleware will be applied to all the routes registered in this group.
 	v1 := ae.Group("/api/v1/whatsapp").Use(
-		//	httpMiddleware.CORS(),
-		//	httpMiddleware.EntitySizeAllowed(),
-		httpMiddleware.WhatsappSession(wac),
+	//	httpMiddleware.CORS(),
+	//	httpMiddleware.EntitySizeAllowed(),
+	//httpMiddleware.WhatsappSession(wac),
 	)
 	httpHandlers.NewWhatsappAccountHttpHandler(v1, wac)
 	httpHandlers.NewWhatsappMessageHttpHandler(v1, wac)
@@ -150,7 +149,8 @@ func newWhatsappClient() domain.WhatsappServiceContract {
 		waClientVerBuildInt,
 	)
 
-	whatsappService := services.NewWhatsappService(wac)
+	//whatsappService := services.NewWhatsappService(wac)
+	whatsappService := services.WhatsappService{Conn: wac}
 
 	//Restore session if exists
 	err = whatsappService.RestoreSession()
@@ -158,7 +158,7 @@ func newWhatsappClient() domain.WhatsappServiceContract {
 		exitF("Error restoring whatsapp session. ", err)
 	}
 
-	return whatsappService
+	return &whatsappService
 }
 
 func exitF(s string, args ...interface{}) {

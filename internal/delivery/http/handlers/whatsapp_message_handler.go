@@ -32,29 +32,74 @@ func NewWhatsappMessageHttpHandler(
 
 // sendText handler
 func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
+	var form domain.WhatsappSendTextForm
+
+	if err := context.ShouldBind(&form); err != nil {
+		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
+		errs := ginError.ListAllErrors(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		return
+	}
+
 	httpDelivery.NewHttpRespond(
 		context,
 		http.StatusOK,
-		"Hello Text",
+		&form,
 	)
 }
 
 // sendLocation handler
 func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
-	// TODO
+	var form domain.WhatsappSendLocationForm
+
+	if err := context.ShouldBind(&form); err != nil {
+		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
+		errs := ginError.ListAllErrors(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		return
+	}
+
+	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
 // sendImage handler
 func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
-	// TODO
+	var form domain.WhatsappSendFileForm
+
+	if err := context.ShouldBind(&form); err != nil {
+		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
+		errs := ginError.ListAllErrors(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		return
+	}
+
+	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
 // sendAudio handler
 func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
-	// TODO
+	var form domain.WhatsappSendFileForm
+
+	if err := context.ShouldBind(&form); err != nil {
+		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
+		errs := ginError.ListAllErrors(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		return
+	}
+
+	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
 // sendDocument handler
 func (handler whatsappMessageHTTPHandler) sendDocument(context *gin.Context) {
-	// TODO
+	var form domain.WhatsappSendFileForm
+
+	if err := context.ShouldBind(&form); err != nil {
+		ginError := domain.NewGinErrors(domain.RequestWhatsappErrorMessage)
+		errs := ginError.ListAllErrors(form, err)
+		httpDelivery.NewHttpRespond(context, http.StatusUnprocessableEntity, errs)
+		return
+	}
+
+	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }

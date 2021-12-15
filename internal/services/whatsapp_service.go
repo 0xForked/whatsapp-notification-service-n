@@ -2,18 +2,17 @@ package services
 
 import (
 	"github.com/Rhymen/go-whatsapp"
-	"github.com/Rhymen/go-whatsapp/binary/proto"
 	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/utils"
 	"os"
 )
 
-type whatsappService struct {
-	whatsappConn *whatsapp.Conn
+type WhatsappService struct {
+	Conn *whatsapp.Conn
 }
 
-func (w *whatsappService) Login() (qr string, err error) {
-	if w.whatsappConn.GetConnected() && w.whatsappConn.GetLoggedIn() {
+func (w *WhatsappService) Login() (qr string, err error) {
+	if w.Conn.GetConnected() && w.Conn.GetLoggedIn() {
 		err = domain.ErrAlreadyConnectedAndLoggedIn
 		return
 	}
@@ -27,7 +26,7 @@ func (w *whatsappService) Login() (qr string, err error) {
 
 	go func() {
 		session := whatsapp.Session{}
-		session, err = w.whatsappConn.Login(qrCode)
+		session, err = w.Conn.Login(qrCode)
 		if err != nil {
 			// log.Println(log.LogLevelError, "error during login:", err)
 		} else {
@@ -56,12 +55,12 @@ func (w *whatsappService) Login() (qr string, err error) {
 	}
 }
 
-func (w *whatsappService) RestoreSession() error {
+func (w *WhatsappService) RestoreSession() error {
 	//load saved session
 	session, err := utils.ReadSession()
 	if err == nil {
 		//restore session
-		session, err = w.whatsappConn.RestoreWithSession(session)
+		session, err = w.Conn.RestoreWithSession(session)
 		if err != nil {
 			_ = os.Remove(os.Getenv("WAC_SESSION_PATH") +
 				"/whatsapp_session.gob")
@@ -80,16 +79,16 @@ func (w *whatsappService) RestoreSession() error {
 	return nil
 }
 
-func (w *whatsappService) HasSession() (err error) {
-	if w.whatsappConn.GetConnected() == false ||
-		w.whatsappConn.GetLoggedIn() == false {
+func (w *WhatsappService) HasSession() (err error) {
+	if w.Conn.GetConnected() == false ||
+		w.Conn.GetLoggedIn() == false {
 		return domain.ErrInvalidSession
 	}
 
 	return nil
 }
 
-func (w *whatsappService) SendText(
+func (w *WhatsappService) SendText(
 	form domain.WhatsappSendTextForm,
 ) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
@@ -101,26 +100,26 @@ func (w *whatsappService) SendText(
 		Text: form.Text,
 	}
 
-	if len(form.MsgQuotedID) != 0 {
-		quotedMessage := proto.Message{
-			Conversation: &form.MsgQuoted,
-		}
+	//if len(form.MsgQuotedID) != 0 {
+	//	quotedMessage := proto.Message{
+	//		Conversation: &form.MsgQuoted,
+	//	}
+	//
+	//	ContextInfo := whatsapp.ContextInfo{
+	//		QuotedMessageID: form.MsgQuotedID,
+	//		QuotedMessage:   &quotedMessage,
+	//		Participant:     jid,
+	//	}
+	//
+	//	msg.ContextInfo = ContextInfo
+	//}
 
-		ContextInfo := whatsapp.ContextInfo{
-			QuotedMessageID: form.MsgQuotedID,
-			QuotedMessage:   &quotedMessage,
-			Participant:     jid,
-		}
-
-		msg.ContextInfo = ContextInfo
-	}
-
-	msgId, err = w.whatsappConn.Send(msg)
+	msgId, err = w.Conn.Send(msg)
 
 	return
 }
 
-func (w *whatsappService) SendLocation(
+func (w *WhatsappService) SendLocation(
 	form domain.WhatsappSendLocationForm,
 ) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
@@ -133,26 +132,26 @@ func (w *whatsappService) SendLocation(
 		DegreesLongitude: form.Longitude,
 	}
 
-	if len(form.MsgQuotedID) != 0 {
-		quotedMessage := proto.Message{
-			Conversation: &form.MsgQuoted,
-		}
+	//if len(form.MsgQuotedID) != 0 {
+	//	quotedMessage := proto.Message{
+	//		Conversation: &form.MsgQuoted,
+	//	}
+	//
+	//	ContextInfo := whatsapp.ContextInfo{
+	//		QuotedMessageID: form.MsgQuotedID,
+	//		QuotedMessage:   &quotedMessage,
+	//		Participant:     jid,
+	//	}
+	//
+	//	msg.ContextInfo = ContextInfo
+	//}
 
-		ContextInfo := whatsapp.ContextInfo{
-			QuotedMessageID: form.MsgQuotedID,
-			QuotedMessage:   &quotedMessage,
-			Participant:     jid,
-		}
-
-		msg.ContextInfo = ContextInfo
-	}
-
-	msgId, err = w.whatsappConn.Send(msg)
+	msgId, err = w.Conn.Send(msg)
 
 	return
 }
 
-func (w *whatsappService) SendFile(
+func (w *WhatsappService) SendFile(
 	form domain.WhatsappSendFileForm,
 	fileType string,
 ) (msgId string, err error) {
@@ -172,8 +171,8 @@ func (w *whatsappService) SendFile(
 	return
 }
 
-func (w *whatsappService) Logout() (err error) {
-	err = utils.LogoutSession(w.whatsappConn)
+func (w *WhatsappService) Logout() (err error) {
+	err = utils.LogoutSession(w.Conn)
 	if err != nil {
 		return
 	}
@@ -181,11 +180,11 @@ func (w *whatsappService) Logout() (err error) {
 	return
 }
 
-func NewWhatsappService(conn *whatsapp.Conn) domain.WhatsappServiceContract {
-	return &whatsappService{whatsappConn: conn}
-}
+//func NewWhatsappService(conn *whatsapp.Conn) domain.WhatsappServiceContract {
+//	return &whatsappService{whatsappConn: conn}
+//}
 
-func sendDocument(w *whatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendDocument(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()
@@ -203,26 +202,26 @@ func sendDocument(w *whatsappService, form domain.WhatsappSendFileForm) (msgId s
 		Title:    form.FileHeader.Filename,
 	}
 
-	if len(form.MsgQuotedID) != 0 {
-		quotedMessage := proto.Message{
-			Conversation: &form.MsgQuoted,
-		}
+	//if len(form.MsgQuotedID) != 0 {
+	//	quotedMessage := proto.Message{
+	//		Conversation: &form.MsgQuoted,
+	//	}
+	//
+	//	ContextInfo := whatsapp.ContextInfo{
+	//		QuotedMessageID: form.MsgQuotedID,
+	//		QuotedMessage:   &quotedMessage,
+	//		Participant:     jid,
+	//	}
+	//
+	//	msg.ContextInfo = ContextInfo
+	//}
 
-		ContextInfo := whatsapp.ContextInfo{
-			QuotedMessageID: form.MsgQuotedID,
-			QuotedMessage:   &quotedMessage,
-			Participant:     jid,
-		}
-
-		msg.ContextInfo = ContextInfo
-	}
-
-	msgId, err = w.whatsappConn.Send(msg)
+	msgId, err = w.Conn.Send(msg)
 
 	return
 }
 
-func sendImage(w *whatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendImage(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()
@@ -239,26 +238,26 @@ func sendImage(w *whatsappService, form domain.WhatsappSendFileForm) (msgId stri
 		Caption: form.Message,
 	}
 
-	if len(form.MsgQuotedID) != 0 {
-		quotedMessage := proto.Message{
-			Conversation: &form.MsgQuoted,
-		}
+	//if len(form.MsgQuotedID) != 0 {
+	//	quotedMessage := proto.Message{
+	//		Conversation: &form.MsgQuoted,
+	//	}
+	//
+	//	ContextInfo := whatsapp.ContextInfo{
+	//		QuotedMessageID: form.MsgQuotedID,
+	//		QuotedMessage:   &quotedMessage,
+	//		Participant:     jid,
+	//	}
+	//
+	//	msg.ContextInfo = ContextInfo
+	//}
 
-		ContextInfo := whatsapp.ContextInfo{
-			QuotedMessageID: form.MsgQuotedID,
-			QuotedMessage:   &quotedMessage,
-			Participant:     jid,
-		}
-
-		msg.ContextInfo = ContextInfo
-	}
-
-	msgId, err = w.whatsappConn.Send(msg)
+	msgId, err = w.Conn.Send(msg)
 
 	return
 }
 
-func sendAudio(w *whatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendAudio(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()
@@ -274,28 +273,28 @@ func sendAudio(w *whatsappService, form domain.WhatsappSendFileForm) (msgId stri
 		Type:    form.FileHeader.Header.Get("Content-Type"),
 	}
 
-	if len(form.MsgQuotedID) != 0 {
-		quotedMessage := proto.Message{
-			Conversation: &form.MsgQuoted,
-		}
+	//if len(form.MsgQuotedID) != 0 {
+	//	quotedMessage := proto.Message{
+	//		Conversation: &form.MsgQuoted,
+	//	}
+	//
+	//	ContextInfo := whatsapp.ContextInfo{
+	//		QuotedMessageID: form.MsgQuotedID,
+	//		QuotedMessage:   &quotedMessage,
+	//		Participant:     jid,
+	//	}
+	//
+	//	msg.ContextInfo = ContextInfo
+	//}
 
-		ContextInfo := whatsapp.ContextInfo{
-			QuotedMessageID: form.MsgQuotedID,
-			QuotedMessage:   &quotedMessage,
-			Participant:     jid,
-		}
-
-		msg.ContextInfo = ContextInfo
-	}
-
-	msgId, err = w.whatsappConn.Send(msg)
+	msgId, err = w.Conn.Send(msg)
 
 	return
 }
 
 // check if phone is connected to internet
-func isPhoneConnected(w *whatsappService) error {
-	conn := w.whatsappConn
+func isPhoneConnected(w *WhatsappService) error {
+	conn := w.Conn
 	ok, err := conn.AdminTest()
 	if !ok {
 		if err != nil {
