@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -11,13 +11,13 @@ import (
 
 // ExampleHandler represent the http handler for example
 type whatsappLoginWSHandler struct {
-	waService  domain.WhatsappServiceContract
+	waService  contracts.WhatsappService
 	wsUpgrader websocket.Upgrader
 }
 
 func NewWhatsappLoginWSHandler(
 	router *gin.Engine,
-	waService domain.WhatsappServiceContract,
+	waService contracts.WhatsappService,
 ) {
 	handler := &whatsappLoginWSHandler{
 		wsUpgrader: websocket.Upgrader{

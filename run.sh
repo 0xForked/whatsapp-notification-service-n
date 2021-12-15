@@ -8,7 +8,7 @@ export WAC_UPLOAD_PATH="./storage/uploads"
 # Server Environment settings:
 export SERVER_NAME="GOWA v${WAC_MAJOR_VERSION}.${WAC_MINOR_VERSION}.${WAC_BUILD_VERSION}"
 export SERVER_DESCRIPTION="Whatsapp Web API with Golang (Gin Gonic)"
-export SERVER_URL="0.0.0.0:8080"
+export SERVER_URL="127.0.0.1:8080"
 export SERVER_ENV="debug" # debug | release
 export SERVER_READ_TIMEOUT=60
 export SERVER_UPLOAD_LIMIT=1

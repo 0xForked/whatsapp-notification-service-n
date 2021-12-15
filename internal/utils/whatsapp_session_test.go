@@ -1,8 +1,10 @@
 package utils_test
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestWriteSession(t *testing.T) {
+func TestWriteSession_shouldError(t *testing.T) {
 
 }
 
@@ -11,5 +13,5 @@ func TestReadSession(t *testing.T) {
 }
 
 func TestLogoutSession(t *testing.T) {
-	
+
 }

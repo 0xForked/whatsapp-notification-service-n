@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/Rhymen/go-whatsapp"
 	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/domain/models"
 	"github.com/aasumitro/gowa/internal/utils"
 	"os"
 )
@@ -89,7 +90,7 @@ func (w *WhatsappService) HasSession() (err error) {
 }
 
 func (w *WhatsappService) SendText(
-	form domain.WhatsappSendTextForm,
+	form models.WhatsappSendTextForm,
 ) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
@@ -120,7 +121,7 @@ func (w *WhatsappService) SendText(
 }
 
 func (w *WhatsappService) SendLocation(
-	form domain.WhatsappSendLocationForm,
+	form models.WhatsappSendLocationForm,
 ) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
@@ -152,7 +153,7 @@ func (w *WhatsappService) SendLocation(
 }
 
 func (w *WhatsappService) SendFile(
-	form domain.WhatsappSendFileForm,
+	form models.WhatsappSendFileForm,
 	fileType string,
 ) (msgId string, err error) {
 	switch fileType {
@@ -184,7 +185,7 @@ func (w *WhatsappService) Logout() (err error) {
 //	return &whatsappService{whatsappConn: conn}
 //}
 
-func sendDocument(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendDocument(w *WhatsappService, form models.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()
@@ -221,7 +222,7 @@ func sendDocument(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId s
 	return
 }
 
-func sendImage(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendImage(w *WhatsappService, form models.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()
@@ -257,7 +258,7 @@ func sendImage(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId stri
 	return
 }
 
-func sendAudio(w *WhatsappService, form domain.WhatsappSendFileForm) (msgId string, err error) {
+func sendAudio(w *WhatsappService, form models.WhatsappSendFileForm) (msgId string, err error) {
 	jid := utils.ParseMsisdn(form.Msisdn)
 
 	f, err := form.FileHeader.Open()

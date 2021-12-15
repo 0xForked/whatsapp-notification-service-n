@@ -7,7 +7,7 @@ import (
 	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
-	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/aasumitro/gowa/internal/services"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -18,10 +18,10 @@ import (
 )
 
 // ae stand for App Engine
-var ae *gin.Engine
+var ginEngine *gin.Engine
 
 // wac stand for Whatsapp Client
-var wac domain.WhatsappServiceContract
+var whatsappService contracts.WhatsappService
 
 func init() {
 	// sets the maximum number of CPUs that can be executing
@@ -35,13 +35,13 @@ func init() {
 
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
-	ae = gin.Default()
+	ginEngine = gin.Default()
 
 	// Create a new WhatsApp connection
-	wac = newWhatsappClient()
+	whatsappService = newWhatsappClient()
 
 	// swagger info base path
-	docs.SwaggerInfo.BasePath = ae.BasePath()
+	docs.SwaggerInfo.BasePath = ginEngine.BasePath()
 }
 
 // @title WhatsApp Web API with Golang
@@ -59,24 +59,24 @@ func init() {
 // @license.url   https://github.com/aasumitro/gowa/blob/master/LICENSE
 func main() {
 	// initialize ws handler
-	wsHandlers.NewWhatsappLoginWSHandler(ae, wac)
+	wsHandlers.NewWhatsappLoginWSHandler(ginEngine, whatsappService)
 
 	// initialize home http handler
-	httpHandlers.NewHomeHttpHandler(ae)
+	httpHandlers.NewHomeHttpHandler(ginEngine)
 	// initialize whatsapp http handler
 	//httpMiddleware := middlewares.InitHttpMiddleware()
 	// create a new router group for the handler to register routes to and apply the middleware to it.
 	// The middleware will be applied to all the routes registered in this group.
-	v1 := ae.Group("/api/v1/whatsapp").Use(
+	v1 := ginEngine.Group("/api/v1/whatsapp").Use(
 	//	httpMiddleware.CORS(),
 	//	httpMiddleware.EntitySizeAllowed(),
-	//httpMiddleware.WhatsappSession(wac),
+	//	httpMiddleware.WhatsappSession(wac),
 	)
-	httpHandlers.NewWhatsappAccountHttpHandler(v1, wac)
-	httpHandlers.NewWhatsappMessageHttpHandler(v1, wac)
+	httpHandlers.NewWhatsappAccountHttpHandler(v1, whatsappService)
+	httpHandlers.NewWhatsappMessageHttpHandler(v1, whatsappService)
 
 	// Running the server
-	log.Fatal(ae.Run(os.Getenv("SERVER_URL")))
+	log.Fatal(ginEngine.Run(os.Getenv("SERVER_URL")))
 }
 
 func validateEnvironment() {
@@ -115,7 +115,7 @@ func validateEnvironment() {
 	}
 }
 
-func newWhatsappClient() domain.WhatsappServiceContract {
+func newWhatsappClient() contracts.WhatsappService {
 	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         20 * time.Second,
 		ShortClientName: os.Getenv("SERVER_NAME"),

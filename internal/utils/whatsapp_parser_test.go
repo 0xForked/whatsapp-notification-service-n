@@ -2,6 +2,7 @@ package utils_test
 
 import (
 	"github.com/aasumitro/gowa/internal/utils"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -21,8 +22,6 @@ func TestParseMsisdn(t *testing.T) {
 
 	for _, test := range testsData {
 		actual := utils.ParseMsisdn(test.input)
-		if actual != test.expected {
-			t.Errorf("ParseMsisdn(%s) = %s, expected %s", test.input, actual, test.expected)
-		}
+		assert.Equal(t, test.expected, actual)
 	}
 }
