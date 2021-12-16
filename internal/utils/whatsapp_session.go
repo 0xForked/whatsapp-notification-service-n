@@ -34,7 +34,7 @@ func WriteSession(session whatsapp.Session) error {
 // ReadSession - Read Whatsapp Session from a stored file on temporary directory
 func ReadSession() (whatsapp.Session, error) {
 	session := whatsapp.Session{}
-	file, err := os.Create(
+	file, err := os.Open(
 		os.Getenv("WAC_SESSION_PATH") +
 			"/whatsapp_session.gob")
 	if err != nil {

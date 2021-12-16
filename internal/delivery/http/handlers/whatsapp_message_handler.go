@@ -32,7 +32,20 @@ func NewWhatsappMessageHttpHandler(
 	router.POST("/send-document", handler.sendDocument)
 }
 
-// sendText handler
+// SendText func for send text.
+// @Schemes
+// @Summary send text message
+// @Description Send whatsapp text message.
+// @Tags Whatsapp Messaging
+// @Accept mpfd
+// @Produce json
+// @Param msisdn formData string true "Destination number. eg: 6281255423 or group_creator-timstamp_created -> 6281271471566-1619679643 for group"
+// @Param text formData string true "Message text"
+// @Success 200 {object} delivery.HttpSuccessRespond{data=object} "success respond"
+// @Failure 400 {object} delivery.HttpErrorRespond{data=string} "bad request respond"
+// @Failure 422 {object} delivery.HttpValidationErrorRespond{data=object} "unprocessable entity respond"
+// @Failure 500 {object} delivery.HttpServerErrorRespond{data=string} "internal server error respond"
+// @Router /api/v1/whatsapp/send-text [POST]
 func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 	var form models.WhatsappSendTextForm
 
@@ -42,10 +55,17 @@ func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 		return
 	}
 
+	msgId, err := handler.waService.SendText(form)
+	if err != nil {
+		httpDelivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+	}
+
 	httpDelivery.NewHttpRespond(
 		context,
 		http.StatusOK,
-		&form,
+		map[string]string{
+			"message_id": msgId,
+		},
 	)
 }
 
