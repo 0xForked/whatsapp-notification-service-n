@@ -6,6 +6,7 @@ import (
 	"github.com/aasumitro/gowa/docs"
 	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
+	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/aasumitro/gowa/internal/services"
@@ -33,12 +34,12 @@ func init() {
 	// set server mode
 	gin.SetMode(os.Getenv("SERVER_ENV"))
 
+	// Create a new WhatsApp connection
+	whatsappService = newWhatsappClient()
+
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	ginEngine = gin.Default()
-
-	// Create a new WhatsApp connection
-	whatsappService = newWhatsappClient()
 
 	// swagger info base path
 	docs.SwaggerInfo.BasePath = ginEngine.BasePath()
@@ -63,17 +64,29 @@ func main() {
 
 	// initialize home http handler
 	httpHandlers.NewHomeHttpHandler(ginEngine)
-	// initialize whatsapp http handler
-	//httpMiddleware := middlewares.InitHttpMiddleware()
+
 	// create a new router group for the handler to register routes to and apply the middleware to it.
 	// The middleware will be applied to all the routes registered in this group.
-	v1 := ginEngine.Group("/api/v1/whatsapp").Use(
-	//	httpMiddleware.CORS(),
-	//	httpMiddleware.EntitySizeAllowed(),
-	//	httpMiddleware.WhatsappSession(wac),
-	)
-	httpHandlers.NewWhatsappAccountHttpHandler(v1, whatsappService)
-	httpHandlers.NewWhatsappMessageHttpHandler(v1, whatsappService)
+	v1Group := ginEngine.Group("/api/v1")
+	{
+		waGroup := v1Group.Group("/whatsapp")
+		{
+			// whatsapp account handler
+			httpHandlers.NewWhatsappAccountHttpHandler(waGroup, whatsappService)
+
+			// initialize whatsapp http handler
+			httpMiddleware := middlewares.InitHttpMiddleware()
+			// whatsapp message handler
+			msgGroup := waGroup.Group("").Use(
+				//httpMiddleware.CORS(),
+				//httpMiddleware.EntitySizeAllowed(),
+				httpMiddleware.WhatsappSession(whatsappService),
+			)
+			{
+				httpHandlers.NewWhatsappMessageHttpHandler(msgGroup, whatsappService)
+			}
+		}
+	}
 
 	// Running the server
 	log.Fatal(ginEngine.Run(os.Getenv("SERVER_URL")))

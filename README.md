@@ -45,8 +45,15 @@ $ ./run.sh
 ```
 
 ### API Access
-Go to your API Docs page: [127.0.0.1:8888/docs/index.html](http://127.0.0.1:8888/swagger/index.html)
+Go to your API Docs page: [127.0.0.1:8080/docs/index.html](http://127.0.0.1:8080/swagger/index.html)
 
 ### SDK
 - [Dart]()
 - [Javascript]()
+
+
+### Important
+
+To avoid getting banned from whatsapp, 
+please don't send a spam message and make sure 
+receiver is on your contacts list.

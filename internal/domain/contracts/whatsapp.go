@@ -10,6 +10,7 @@ type WhatsappService interface {
 	RestoreSession() error
 	// HasSession - check if the session is valid
 	HasSession() error
+	Profile() (data map[string]string, err error)
 	// SendText SendLocation SendFile - for whatsapp message
 	SendText(form models.WhatsappSendTextForm) (msgId string, err error)
 	SendLocation(form models.WhatsappSendLocationForm) (msgId string, err error)
