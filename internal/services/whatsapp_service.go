@@ -48,12 +48,6 @@ func (w *WhatsappService) Login() (qr string, err error) {
 
 	select {
 	case qr = <-qrCodeChan:
-		// Test ping
-		//err = isPhoneConnected(w)
-		//if err != nil {
-		//	log.Println("ERROR", "error during login: tests", err)
-		//	return
-		//}
 		return
 	}
 }
