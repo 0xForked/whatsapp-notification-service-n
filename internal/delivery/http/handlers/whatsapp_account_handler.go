@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/aasumitro/gowa/internal/delivery"
 	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
+	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/gin-gonic/gin"
 	"github.com/skip2/go-qrcode"
@@ -54,7 +54,12 @@ func (handler whatsappAccountHTTPHandler) login(context *gin.Context) {
 	qrCodeStr, err := handler.waService.Login()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		if err.Error() == domain.ErrAlreadyConnectedAndLoggedIn.Error() {
+			profile, _ := handler.waService.Profile()
+			delivery.NewHttpRespond(context, http.StatusOK, profile)
+			return
+		}
+
 		delivery.NewHttpRespond(
 			context,
 			http.StatusBadRequest,

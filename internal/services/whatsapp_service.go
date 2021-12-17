@@ -76,6 +76,10 @@ func (w *WhatsappService) RestoreSession() error {
 }
 
 func (w *WhatsappService) HasSession() (err error) {
+	if w.Conn.Info == nil {
+		_, _ = w.Conn.Disconnect()
+	}
+
 	if w.Conn.GetConnected() == false ||
 		w.Conn.GetLoggedIn() == false {
 		return domain.ErrInvalidSession

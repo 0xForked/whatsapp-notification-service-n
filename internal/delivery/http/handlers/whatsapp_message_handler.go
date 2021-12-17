@@ -69,7 +69,7 @@ func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 	)
 }
 
-// sendLocation handler
+// sendLocation handler TODO
 func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
 	var form models.WhatsappSendLocationForm
 
@@ -82,7 +82,7 @@ func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
 	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
-// sendImage handler
+// sendImage handler TODO
 func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 	var form models.WhatsappSendFileForm
 
@@ -95,7 +95,7 @@ func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
-// sendAudio handler
+// sendAudio handler TODO
 func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 	var form models.WhatsappSendFileForm
 
@@ -108,7 +108,7 @@ func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 	httpDelivery.NewHttpRespond(context, http.StatusOK, &form)
 }
 
-// sendDocument handler
+// sendDocument handler TODO
 func (handler whatsappMessageHTTPHandler) sendDocument(context *gin.Context) {
 	var form models.WhatsappSendFileForm
 
