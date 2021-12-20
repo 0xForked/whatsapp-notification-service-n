@@ -100,6 +100,7 @@ func (handler whatsappAccountHTTPHandler) login(context *gin.Context) {
 // @Router /api/v1/whatsapp/profile [get]
 func (handler whatsappAccountHTTPHandler) profile(context *gin.Context) {
 	profile, err := handler.waService.Profile()
+
 	if err != nil {
 		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
@@ -121,6 +122,7 @@ func (handler whatsappAccountHTTPHandler) profile(context *gin.Context) {
 // @Router /api/v1/whatsapp/logout [post]
 func (handler whatsappAccountHTTPHandler) logout(context *gin.Context) {
 	err := handler.waService.Logout()
+
 	if err != nil {
 		delivery.NewHttpRespond(
 			context,

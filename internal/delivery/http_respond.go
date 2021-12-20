@@ -62,11 +62,12 @@ func NewHttpRespond(context *gin.Context, code int, data interface{}) {
 	}
 
 	msg := func() string {
-		if data != nil {
+		switch {
+		case data != nil:
 			return data.(string)
-		} else if code == http.StatusBadRequest {
+		case code == http.StatusBadRequest:
 			return "something went wrong with the request"
-		} else {
+		default:
 			return "something went wrong with the server"
 		}
 	}()

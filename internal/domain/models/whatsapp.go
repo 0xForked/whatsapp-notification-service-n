@@ -16,24 +16,18 @@ var WhatsappValidationErrorMessage = map[string]string{
 type WhatsappSendTextForm struct {
 	Msisdn string `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
 	Text   string `json:"text" form:"text" validate:"required" binding:"required" msg:"error_required_text"`
-	//MsgQuotedID string `json:"msg_quoted_id" form:"msg_quoted_id"`
-	//MsgQuoted   string `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappSendLocationForm struct {
 	Msisdn    string  `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
 	Latitude  float64 `json:"latitude" form:"latitude" validate:"required,latitude" binding:"required" msg:"error_required_latitude"`
 	Longitude float64 `json:"longitude" form:"longitude" validate:"required,longitude" binding:"required" msg:"error_required_longitude"`
-	//MsgQuotedID string  `json:"msg_quoted_id" form:"msg_quoted_id"`
-	//MsgQuoted   string  `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappSendFileForm struct {
 	Msisdn     string                `json:"msisdn" form:"msisdn" validate:"required" binding:"required" msg:"error_required_msisdn"`
 	Message    string                `json:"message" form:"message"`
 	FileHeader *multipart.FileHeader `json:"file" form:"file" binding:"required" msg:"error_required_file"`
-	//MsgQuotedID string                `json:"msg_quoted_id" form:"msg_quoted_id"`
-	//MsgQuoted   string                `json:"msg_quoted" form:"msg_quoted"`
 }
 
 type WhatsappWebServer struct {

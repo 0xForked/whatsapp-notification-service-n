@@ -93,10 +93,9 @@ func (w *WhatsappService) Profile() (data map[string]string, err error) {
 	ok, err := conn.AdminTest()
 	if !ok {
 		if err != nil {
-			return
+			err = domain.ErrPhoneNotConnected
 		}
 
-		err = domain.ErrPhoneNotConnected
 		return
 	}
 

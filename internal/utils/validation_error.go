@@ -23,7 +23,7 @@ func NewValidationErrors(errors map[string]string) contracts.ValidationErrors {
 	}
 }
 
-func (ge validationErrors) All(model interface{}, err error) map[string]string {
+func (v validationErrors) All(model interface{}, err error) map[string]string {
 	errs := map[string]string{}
 	fields := map[string]ValidationErrorResult{}
 
@@ -40,7 +40,7 @@ func (ge validationErrors) All(model interface{}, err error) map[string]string {
 				jsonTag = field.Name
 			}
 			messageTag := field.Tag.Get("msg")
-			msg := ge.getErrorMessage(messageTag)
+			msg := v.getErrorMessage(messageTag)
 
 			fmt.Printf("%s: %v = %v, tag= %v\n", field.Name, field.Type, value, jsonTag)
 			fields[field.Name] = ValidationErrorResult{
@@ -66,8 +66,8 @@ func (ge validationErrors) All(model interface{}, err error) map[string]string {
 	return errs
 }
 
-func (ge validationErrors) getErrorMessage(key string) string {
-	if value, ok := ge.errorMaps[key]; ok {
+func (v validationErrors) getErrorMessage(key string) string {
+	if value, ok := v.errorMaps[key]; ok {
 		return value
 	}
 	return key
