@@ -100,9 +100,9 @@ func (w *WhatsappService) Profile() (data map[string]string, err error) {
 	}
 
 	data = map[string]string{
-		"display_name":    conn.Info.Pushname,
-		"current_battery": fmt.Sprintf("%d%%", conn.Info.Battery),
-		"platform":        conn.Info.Platform,
+		"display_name":   conn.Info.Pushname,
+		"phone_battery":  fmt.Sprintf("%d%%", conn.Info.Battery),
+		"phone_platform": conn.Info.Platform,
 	}
 
 	return
@@ -157,9 +157,12 @@ func (w *WhatsappService) SendFile(form models.WhatsappSendFileForm, fileType st
 }
 
 func (w *WhatsappService) Logout() (err error) {
-	err = utils.LogoutSession(w.Conn)
-	if err != nil {
-		return
+	if err := w.Conn.Logout(); err != nil {
+		return err
+	}
+
+	if err := utils.RemoveSession(w.Conn); err != nil {
+		return err
 	}
 
 	return

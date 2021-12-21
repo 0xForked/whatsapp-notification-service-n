@@ -65,22 +65,15 @@ func main() {
 	// The middleware will be applied to all the routes registered in this group.
 	v1Group := ginEngine.Group("/api/v1")
 	{
-		waGroup := v1Group.Group("/whatsapp")
+		// initialize whatsapp http handler
+		httpMiddleware := middlewares.InitHttpMiddleware()
+		waGroup := v1Group.Group("/whatsapp").Use(httpMiddleware.CORS())
 		{
 			// whatsapp account handler
 			httpHandlers.NewWhatsappAccountHttpHandler(waGroup, whatsappService)
 
-			// initialize whatsapp http handler
-			httpMiddleware := middlewares.InitHttpMiddleware()
 			// whatsapp message handler
-			msgGroup := waGroup.Group("").Use(
-				//httpMiddleware.CORS(),
-				//httpMiddleware.EntitySizeAllowed(),
-				httpMiddleware.WhatsappSession(whatsappService),
-			)
-			{
-				httpHandlers.NewWhatsappMessageHttpHandler(msgGroup, whatsappService)
-			}
+			httpHandlers.NewWhatsappMessageHttpHandler(waGroup, whatsappService)
 		}
 	}
 
