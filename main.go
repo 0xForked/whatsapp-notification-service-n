@@ -7,7 +7,6 @@ import (
 	_ "github.com/aasumitro/gowa/internal/delivery"
 	httpHandlers "github.com/aasumitro/gowa/internal/delivery/http/handlers"
 	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
-	wsHandlers "github.com/aasumitro/gowa/internal/delivery/ws/handlers"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/aasumitro/gowa/internal/services"
 	"github.com/gin-gonic/gin"
@@ -59,9 +58,6 @@ func init() {
 // @license.name  MIT
 // @license.url   https://github.com/aasumitro/gowa/blob/master/LICENSE
 func main() {
-	// initialize ws handler
-	wsHandlers.NewWhatsappLoginWSHandler(ginEngine, whatsappService)
-
 	// initialize home http handler
 	httpHandlers.NewHomeHttpHandler(ginEngine)
 

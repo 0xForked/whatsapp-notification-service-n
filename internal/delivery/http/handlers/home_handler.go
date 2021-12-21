@@ -27,14 +27,13 @@ func NewHomeHttpHandler(
 func (handler homeHTTPHandler) home(context *gin.Context) {
 	delivery.NewHttpRespond(context, http.StatusOK, map[string]interface{}{
 		"01_title": fmt.Sprintf("Whatsapp API with Golang (%s)", os.Getenv("SERVER_NAME")),
-		"02_docs":  fmt.Sprintf("http://%s/docs/index.html", os.Getenv("SERVER_URL")),
+		"02_spec":  fmt.Sprintf("http://%s/docs/index.html", os.Getenv("SERVER_URL")),
 		"03_perquisites": map[string]interface{}{
 			"01_language":  "https://github.com/golang/go",
 			"02_framework": "https://github.com/gin-gonic/gin",
 			"03_library": map[string]string{
-				"01_swagger":   "https://github.com/swaggo/swag",
-				"02_websocket": "https://github.com/gorilla/websocket",
-				"03_whatsapp":  "https://github.com/Rhymen/go-whatsapp",
+				"01_swagger":  "https://github.com/swaggo/swag",
+				"02_whatsapp": "https://github.com/Rhymen/go-whatsapp",
 			},
 		},
 	})
