@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/aasumitro/gowa/internal/delivery"
+	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/aasumitro/gowa/internal/domain/models"
 	"github.com/aasumitro/gowa/internal/utils"
@@ -26,11 +27,26 @@ func NewWhatsappMessageHttpHandler(
 	handler := &whatsappMessageHTTPHandler{waService: waService}
 
 	// whatsapp message routes registration here ...
-	router.POST("/send-text", handler.sendText)
-	router.POST("/send-location", handler.sendLocation)
-	router.POST("/send-image", handler.sendImage)
-	router.POST("/send-audio", handler.sendAudio)
-	router.POST("/send-document", handler.sendDocument)
+	router.POST("/send-text", handler.sendText).Use(
+		middlewares.
+			InitHttpMiddleware().
+			WhatsappSession(handler.waService))
+	router.POST("/send-location", handler.sendLocation).Use(
+		middlewares.
+			InitHttpMiddleware().
+			WhatsappSession(handler.waService))
+	router.POST("/send-image", handler.sendImage).Use(
+		middlewares.
+			InitHttpMiddleware().
+			WhatsappSession(handler.waService))
+	router.POST("/send-audio", handler.sendAudio).Use(
+		middlewares.
+			InitHttpMiddleware().
+			WhatsappSession(handler.waService))
+	router.POST("/send-document", handler.sendDocument).Use(
+		middlewares.
+			InitHttpMiddleware().
+			WhatsappSession(handler.waService))
 }
 
 // sendText handler for send whatsapp message by text.

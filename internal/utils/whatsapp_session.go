@@ -56,17 +56,12 @@ func ReadSession() (whatsapp.Session, error) {
 	return session, nil
 }
 
-// LogoutSession - Logout Whatsapp Session and remove the file on temporary directory
-func LogoutSession(wac *whatsapp.Conn) error {
+// RemoveSession - Logout Whatsapp Session and remove the file on temporary directory
+func RemoveSession(wac *whatsapp.Conn) error {
 	defer func() {
 		fmt.Println("Disconnecting..")
 		_, _ = wac.Disconnect()
 	}()
-
-	err := wac.Logout()
-	if err != nil {
-		return err
-	}
 
 	_ = os.Remove(os.Getenv("WAC_SESSION_PATH") +
 		"/whatsapp_session.gob")
