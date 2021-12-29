@@ -151,7 +151,6 @@ func newWhatsappClient() contracts.WhatsappService {
 		waClientVerBuildInt,
 	)
 
-	//whatsappService := services.NewWhatsappService(wac)
 	whatsappService := services.WhatsappService{Conn: wac}
 
 	//Restore session if exists

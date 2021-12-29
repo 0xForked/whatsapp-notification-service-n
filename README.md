@@ -1,7 +1,6 @@
 # WhatsApp Notification Service with Golang
 
 `gowa` Implements the WhatsApp Web API using [Gin Gonic](https://github.com/gin-gonic/gin) web framework,
-[Gorila Websocket](github.com/gorilla/websocket),
 and also [Gin Swagger](https://github.com/swaggo/gin-swagger) to generate Swagger Documentation (2.0).
 
 ## Getting Started
@@ -46,11 +45,6 @@ $ ./run.sh
 
 ### API Access
 Go to your API Docs page: [127.0.0.1:8080/docs/index.html](http://127.0.0.1:8080/swagger/index.html)
-
-### SDK
-- [Dart]()
-- [Javascript]()
-
 
 ### Important
 
