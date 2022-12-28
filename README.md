@@ -51,3 +51,14 @@ Go to your API Docs page: [127.0.0.1:8080/docs/index.html](http://127.0.0.1:8080
 To avoid getting banned from whatsapp, 
 please don't send a spam message and make sure 
 receiver is on your contacts list.
+
+### TODO
+
+- [ ] Refactor
+- [ ] Tests
+- [ ] Impl Data Store
+- [ ] Impl Auto-reply Bot
+- [ ] Improve Handler
+- [ ] Improve Service
+- [ ] Impl Tracing, Logging, etc.
+- [ ] Events handling

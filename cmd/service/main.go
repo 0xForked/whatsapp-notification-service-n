@@ -18,11 +18,12 @@ import (
 )
 
 // ae stand for App Engine
-var ginEngine *gin.Engine
+var (
+	ginEngine       *gin.Engine
+	whatsappService contracts.WhatsappService
+)
 
 // wac stand for Whatsapp Client
-var whatsappService contracts.WhatsappService
-
 func init() {
 	// sets the maximum number of CPUs that can be executing
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -31,7 +32,7 @@ func init() {
 	validateEnvironment()
 
 	// set server mode
-	gin.SetMode(os.Getenv("SERVER_ENV"))
+	// gin.SetMode(os.Getenv("SERVER_ENV"))
 
 	// Create a new WhatsApp connection
 	whatsappService = newWhatsappClient()
