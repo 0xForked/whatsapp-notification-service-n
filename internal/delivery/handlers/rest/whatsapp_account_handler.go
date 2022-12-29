@@ -1,10 +1,10 @@
-package handlers
+package rest
 
 import (
-	"github.com/aasumitro/gowa/internal/delivery"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
-	"github.com/aasumitro/gowa/internal/domain"
+	"github.com/aasumitro/gowa/internal/delivery/middlewares"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
+	"github.com/aasumitro/gowa/pkg/apperrors"
+	"github.com/aasumitro/gowa/pkg/apputils"
 	"github.com/gin-gonic/gin"
 	"github.com/skip2/go-qrcode"
 	"net/http"
@@ -27,16 +27,10 @@ func NewWhatsappAccountHttpHandler(
 
 	// whatsapp message routes registration here ...
 	router.POST("/login", handler.login)
-	router.GET("/profile", handler.profile).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService),
-	)
-	router.POST("/logout", handler.logout).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService),
-	)
+	sessionMiddleware := middlewares.WhatsappSession(waService)
+	protectedRouter := router.Use(sessionMiddleware)
+	protectedRouter.GET("/profile", handler.profile)
+	protectedRouter.POST("/logout", handler.logout)
 }
 
 // login godoc
@@ -54,13 +48,13 @@ func (handler whatsappAccountHTTPHandler) login(context *gin.Context) {
 	qrCodeStr, err := handler.waService.Login()
 
 	if err != nil {
-		if err.Error() == domain.ErrAlreadyConnectedAndLoggedIn.Error() {
+		if err.Error() == apperrors.ErrAlreadyConnectedAndLoggedIn.Error() {
 			profile, _ := handler.waService.Profile()
-			delivery.NewHttpRespond(context, http.StatusOK, profile)
+			apputils.NewHttpRespond(context, http.StatusOK, profile)
 			return
 		}
 
-		delivery.NewHttpRespond(
+		apputils.NewHttpRespond(
 			context,
 			http.StatusBadRequest,
 			err.Error(),
@@ -76,7 +70,7 @@ func (handler whatsappAccountHTTPHandler) login(context *gin.Context) {
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusCreated,
 		map[string]string{
@@ -102,11 +96,11 @@ func (handler whatsappAccountHTTPHandler) profile(context *gin.Context) {
 	profile, err := handler.waService.Profile()
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(context, http.StatusOK, profile)
+	apputils.NewHttpRespond(context, http.StatusOK, profile)
 }
 
 // logout godoc.
@@ -124,7 +118,7 @@ func (handler whatsappAccountHTTPHandler) logout(context *gin.Context) {
 	err := handler.waService.Logout()
 
 	if err != nil {
-		delivery.NewHttpRespond(
+		apputils.NewHttpRespond(
 			context,
 			http.StatusBadRequest,
 			err.Error(),
@@ -132,7 +126,7 @@ func (handler whatsappAccountHTTPHandler) logout(context *gin.Context) {
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		"[Action] Logout successfully",

@@ -1,4 +1,4 @@
-package delivery
+package apputils
 
 import (
 	"github.com/gin-gonic/gin"

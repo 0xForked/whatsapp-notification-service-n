@@ -3,9 +3,9 @@ package services
 import (
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
-	"github.com/aasumitro/gowa/internal/domain"
 	"github.com/aasumitro/gowa/internal/domain/models"
 	"github.com/aasumitro/gowa/internal/utils"
+	"github.com/aasumitro/gowa/pkg/apperrors"
 	"log"
 	"os"
 )
@@ -16,7 +16,7 @@ type WhatsappService struct {
 
 func (w *WhatsappService) Login() (qr string, err error) {
 	if w.Conn.GetConnected() && w.Conn.GetLoggedIn() {
-		err = domain.ErrAlreadyConnectedAndLoggedIn
+		err = apperrors.ErrAlreadyConnectedAndLoggedIn
 		return
 	}
 
@@ -82,7 +82,7 @@ func (w *WhatsappService) HasSession() (err error) {
 
 	if w.Conn.GetConnected() == false ||
 		w.Conn.GetLoggedIn() == false {
-		return domain.ErrInvalidSession
+		return apperrors.ErrInvalidSession
 	}
 
 	return nil
@@ -93,7 +93,7 @@ func (w *WhatsappService) Profile() (data map[string]string, err error) {
 	ok, err := conn.AdminTest()
 	if !ok {
 		if err != nil {
-			err = domain.ErrPhoneNotConnected
+			err = apperrors.ErrPhoneNotConnected
 		}
 
 		return
@@ -152,7 +152,7 @@ func (w *WhatsappService) SendFile(form models.WhatsappSendFileForm, fileType st
 		return
 	}
 
-	err = domain.ErrInvalidFileFormat
+	err = apperrors.ErrInvalidFileFormat
 	return
 }
 

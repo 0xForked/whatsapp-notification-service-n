@@ -9,7 +9,7 @@ import (
 )
 
 // SizeAllowed will handle the incoming entity body size middleware
-func (middleware HttpMiddleware) SizeAllowed() gin.HandlerFunc {
+func SizeAllowed() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		limit := os.Getenv("SERVER_UPLOAD_LIMIT")
 		maxUploadSize, err := strconv.ParseInt(limit, 10, 64)

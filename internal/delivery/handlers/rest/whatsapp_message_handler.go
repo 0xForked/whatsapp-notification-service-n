@@ -1,12 +1,12 @@
-package handlers
+package rest
 
 import (
 	"fmt"
-	"github.com/aasumitro/gowa/internal/delivery"
-	"github.com/aasumitro/gowa/internal/delivery/http/middlewares"
+	"github.com/aasumitro/gowa/internal/delivery/middlewares"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
 	"github.com/aasumitro/gowa/internal/domain/models"
 	"github.com/aasumitro/gowa/internal/utils"
+	"github.com/aasumitro/gowa/pkg/apputils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,27 +26,14 @@ func NewWhatsappMessageHttpHandler(
 	// Create a new handler and inject dependencies into it for use in the HTTP request handlers below.
 	handler := &whatsappMessageHTTPHandler{waService: waService}
 
+	sessionMiddleware := middlewares.WhatsappSession(waService)
+	protectedRouter := router.Use(sessionMiddleware)
 	// whatsapp message routes registration here ...
-	router.POST("/send-text", handler.sendText).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService))
-	router.POST("/send-location", handler.sendLocation).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService))
-	router.POST("/send-image", handler.sendImage).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService))
-	router.POST("/send-audio", handler.sendAudio).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService))
-	router.POST("/send-document", handler.sendDocument).Use(
-		middlewares.
-			InitHttpMiddleware().
-			WhatsappSession(handler.waService))
+	protectedRouter.POST("/send-text", handler.sendText)
+	protectedRouter.POST("/send-location", handler.sendLocation)
+	protectedRouter.POST("/send-image", handler.sendImage)
+	protectedRouter.POST("/send-audio", handler.sendAudio)
+	protectedRouter.POST("/send-document", handler.sendDocument)
 }
 
 // sendText handler for send whatsapp message by text.
@@ -68,18 +55,18 @@ func (handler whatsappMessageHTTPHandler) sendText(context *gin.Context) {
 
 	if err := context.ShouldBind(&form); err != nil {
 		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
-		delivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
+		apputils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
 	msgId, err := handler.waService.SendText(form)
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		map[string]string{
@@ -108,18 +95,18 @@ func (handler whatsappMessageHTTPHandler) sendLocation(context *gin.Context) {
 
 	if err := context.ShouldBind(&form); err != nil {
 		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
-		delivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
+		apputils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
 	msgId, err := handler.waService.SendLocation(form)
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		map[string]string{
@@ -147,7 +134,7 @@ func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 
 	if err := context.ShouldBind(&form); err != nil {
 		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
-		delivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
+		apputils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -157,7 +144,7 @@ func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 		imageType := utils.Explode("/", contentType)
 
 		if !utils.InArray(contentType, acceptedType) {
-			delivery.NewHttpRespond(
+			apputils.NewHttpRespond(
 				context,
 				http.StatusBadRequest,
 				fmt.Sprintf("file type error. accepted:png,jpg,jpeg. given:%v.", imageType[1]),
@@ -169,11 +156,11 @@ func (handler whatsappMessageHTTPHandler) sendImage(context *gin.Context) {
 	msgId, err := handler.waService.SendFile(form, "image")
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		map[string]string{
@@ -201,7 +188,7 @@ func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 
 	if err := context.ShouldBind(&form); err != nil {
 		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
-		delivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
+		apputils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
@@ -211,7 +198,7 @@ func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 		audioType := utils.Explode("/", contentType)
 
 		if !utils.InArray(contentType, acceptedType) {
-			delivery.NewHttpRespond(
+			apputils.NewHttpRespond(
 				context,
 				http.StatusBadRequest,
 				fmt.Sprintf("file type error. accepted:mp3,aac,m4a,amr,opus. given:%v.", audioType[1]),
@@ -223,11 +210,11 @@ func (handler whatsappMessageHTTPHandler) sendAudio(context *gin.Context) {
 	msgId, err := handler.waService.SendFile(form, "audio")
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		map[string]string{
@@ -255,18 +242,18 @@ func (handler whatsappMessageHTTPHandler) sendDocument(context *gin.Context) {
 
 	if err := context.ShouldBind(&form); err != nil {
 		validationError := utils.NewValidationErrors(models.WhatsappValidationErrorMessage).All(form, err)
-		delivery.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
+		apputils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
 
 	msgId, err := handler.waService.SendFile(form, "document")
 
 	if err != nil {
-		delivery.NewHttpRespond(context, http.StatusBadRequest, err.Error())
+		apputils.NewHttpRespond(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	delivery.NewHttpRespond(
+	apputils.NewHttpRespond(
 		context,
 		http.StatusOK,
 		map[string]string{

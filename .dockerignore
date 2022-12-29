@@ -1,12 +1,8 @@
 # Files
 .dockerignore
-.editorconfig
 .gitignore
-run.sh
-docker-compose.yml
 Dockerfile
 Makefile
-run.sh
 LICENSE
 **/*.md
 **/*_test.go
@@ -17,4 +13,3 @@ LICENSE
 .github/
 build/
 .idea/
-dto/

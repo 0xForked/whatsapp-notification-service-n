@@ -1,13 +1,13 @@
 package middlewares
 
 import (
-	httpDelivery "github.com/aasumitro/gowa/internal/delivery"
 	"github.com/aasumitro/gowa/internal/domain/contracts"
+	httpDelivery "github.com/aasumitro/gowa/pkg/apputils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func (middleware HttpMiddleware) WhatsappSession(waService contracts.WhatsappService) gin.HandlerFunc {
+func WhatsappSession(waService contracts.WhatsappService) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if err := waService.HasSession(); err != nil {
 			httpDelivery.NewHttpRespond(

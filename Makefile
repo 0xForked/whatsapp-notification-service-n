@@ -45,7 +45,7 @@ lint: $(GOLANGCI)
 run:
 	@echo "Run App"
 	go mod tidy -compat=1.19
-	go run ./cmd/service/main.go
+	go run ./cmd/app/main.go
 
 #docker_build_image:
 #	docker build -t gowa .
