@@ -1,34 +1,48 @@
 .PHONY: test security run stop
 
-export WAC_MAJOR_VERSION = 2021
-export WAC_MINOR_VERSION = 1
-export WAC_BUILD_VERSION = 0
-export WAC_SESSION_PATH="./storage/sessions"
-export WAC_UPLOAD_PATH="./storage/uploads"
+# Exporting bin folder to the path for makefile
+export PATH   := $(PWD)/bin:$(PATH)
+# Default Shell
+export SHELL  := bash
+# Type of OS: Linux or Darwin.
+export OSTYPE := $(shell uname -s)
 
-export SERVER_NAME="GOWA v$(WAC_MAJOR_VERSION).$(WAC_MINOR_VERSION).$(WAC_BUILD_VERSION)"
-export SERVER_DESCRIPTION="GOWA Service v$(WAC_MAJOR_VERSION).$(WAC_MINOR_VERSION).$(WAC_BUILD_VERSION)"
-export SERVER_PORT="8080"
-export SERVER_URL="0.0.0.0:$(SERVER_PORT)"
-export SERVER_ENV=0 # 0 for debug 1 for release 2 for tests
-export SERVER_READ_TIMEOUT=60
-export SERVER_UPLOAD_LIMIT=1
+#export WAC_MAJOR_VERSION = 2021
+#export WAC_MINOR_VERSION = 1
+#export WAC_BUILD_VERSION = 0
+#export WAC_SESSION_PATH="./storage/sessions"
+#export WAC_UPLOAD_PATH="./storage/uploads"
+#export SERVER_NAME="GOWA v$(WAC_MAJOR_VERSION).$(WAC_MINOR_VERSION).$(WAC_BUILD_VERSION)"
+#export SERVER_DESCRIPTION="GOWA Service v$(WAC_MAJOR_VERSION).$(WAC_MINOR_VERSION).$(WAC_BUILD_VERSION)"
+#export SERVER_PORT="8080"
+#export SERVER_URL="0.0.0.0:$(SERVER_PORT)"
+#export SERVER_ENV=0 # 0 for debug 1 for release 2 for tests
+#export SERVER_READ_TIMEOUT=60
+#export SERVER_UPLOAD_LIMIT=1
 
-BUILD_DIR = $(PWD)/bin/build/app
+#BUILD_DIR = $(PWD)/bin/build/app
 
-#security:
-#	gosec -quiet ./...
+# --- Tooling & Variables ----------------------------------------------------------------
+include ./misc/make/tools.Makefile
 
-#test: security
-#	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
-#	go tool cover -func=cover.out
+install-deps: gotestsum
+deps: $(GOTESTSUM)
+deps:
+	@ echo "Required Tools Are Available"
+
+build: swag
+	@ echo "Build Binary"
+	@ mkdir ./bin/build/db
+	@ cp ./db/fresh.db ./bin/build/db/local-data.db && cp .example.env ./bin/build/.env
+	@ go mod tidy -compat=1.19
+	@ go build -o ./build/pokewar ./cmd/web/main.go
+	@ echo "generate binary done!"
 
 swag: tests
 	@ echo "Re-generate Swagger File (API Spec docs)"
 	@ swag init --parseDependency --parseInternal \
-		--parseDepth 4 -g ./cmd/service/main.go
-	@ echo "done"
-
+		--parseDepth 3 -g ./cmd/app/main.go
+	@ echo "generate docs done!"
 
 tests: $(GOTESTSUM) lint
 	@ echo "Run tests"
@@ -36,16 +50,25 @@ tests: $(GOTESTSUM) lint
 		--hide-summary=skipped \
 		-- -coverprofile=cover.out ./...
 	@ rm cover.out
+	@ echo "run tests done"
 
 lint: $(GOLANGCI)
 	@ echo "Applying linter"
 	@ golangci-lint cache clean
 	@ golangci-lint run -c .golangci.yaml ./...
+	@ echo "run linter done"
 
 run:
 	@echo "Run App"
 	go mod tidy -compat=1.19
 	go run ./cmd/app/main.go
+
+prepare:
+	go mod install
+	cp .example.env .env
+
+serve:
+	 http-server ./resources
 
 #docker_build_image:
 #	docker build -t gowa .

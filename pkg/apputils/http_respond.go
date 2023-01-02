@@ -5,40 +5,35 @@ import (
 	"net/http"
 )
 
-// HttpSuccessRespond message
-type HttpSuccessRespond struct {
+type HTTPSuccessRespond struct {
 	Code   int         `json:"code" example:"200"`
 	Status string      `json:"status" example:"OK"`
 	Data   interface{} `json:"data"`
 }
 
-// HttpErrorRespond message
-type HttpErrorRespond struct {
+type HTTPErrorRespond struct {
 	Code   int    `json:"code" example:"400"`
 	Status string `json:"status" example:"Bad Request"`
 	Data   string `json:"data"`
 }
 
-// HttpValidationErrorRespond message
-type HttpValidationErrorRespond struct {
+type HTTPValidationErrorRespond struct {
 	Code   int         `json:"code" example:"422"`
 	Status string      `json:"status" example:"Unprocessable Entity"`
 	Data   interface{} `json:"data"`
 }
 
-// HttpServerErrorRespond message
-type HttpServerErrorRespond struct {
+type HTTPServerErrorRespond struct {
 	Code   int    `json:"code" example:"500"`
 	Status string `json:"status" example:"Internal Server Error"`
 	Data   string `json:"data"`
 }
 
-// NewHttpRespond godoc
-func NewHttpRespond(context *gin.Context, code int, data interface{}) {
+func NewHTTPRespond(context *gin.Context, code int, data interface{}) {
 	if code == http.StatusOK || code == http.StatusCreated {
 		context.JSON(
 			code,
-			HttpSuccessRespond{
+			HTTPSuccessRespond{
 				Code:   code,
 				Status: http.StatusText(code),
 				Data:   data,
@@ -51,7 +46,7 @@ func NewHttpRespond(context *gin.Context, code int, data interface{}) {
 	if code == http.StatusUnprocessableEntity {
 		context.JSON(
 			code,
-			HttpValidationErrorRespond{
+			HTTPValidationErrorRespond{
 				Code:   code,
 				Status: http.StatusText(code),
 				Data:   data,
@@ -74,12 +69,10 @@ func NewHttpRespond(context *gin.Context, code int, data interface{}) {
 
 	context.JSON(
 		code,
-		HttpErrorRespond{
+		HTTPErrorRespond{
 			Code:   code,
 			Status: http.StatusText(code),
 			Data:   msg,
 		},
 	)
-
-	return
 }

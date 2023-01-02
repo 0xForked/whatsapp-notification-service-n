@@ -1,4 +1,4 @@
-package appconfigs
+package appconfig
 
 import (
 	"fmt"
@@ -11,9 +11,9 @@ import (
 type AppConfig struct {
 	AppDebug       bool   `mapstructure:"APP_DEBUG"`
 	AppName        string `mapstructure:"APP_NAME"`
+	AppDescription string `mapstructure:"APP_DESCRIPTION"`
 	AppURL         string `mapstructure:"APP_URL"`
 	AppVersion     string `mapstructure:"APP_VERSION"`
-	AppSessionPath string `mapstructure:"APP_SESSION_PATH"`
 	AppUploadPath  string `mapstructure:"APP_UPLOAD_PATH"`
 	AppReadTimeout int    `mapstructure:"APP_READ_TIMEOUT"`
 	AppUploadLimit int    `mapstructure:"APP_UPLOAD_LIMIT"`

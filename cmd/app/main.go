@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"github.com/aasumitro/gowa/docs"
 	"github.com/aasumitro/gowa/internal"
-	"github.com/aasumitro/gowa/pkg/appconfigs"
-	"github.com/aasumitro/gowa/pkg/appconsts"
+	"github.com/aasumitro/gowa/pkg/appconfig"
+	"github.com/aasumitro/gowa/pkg/appconstant"
 	"github.com/aasumitro/gowa/resources"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 // @contact.name 	@aasumitro
@@ -27,36 +29,44 @@ var (
 )
 
 func init() {
-	appconfigs.LoadEnv()
+	appconfig.LoadEnv()
 
-	if !appconfigs.Instance.AppDebug {
+	if appconfig.Instance.AppDebug {
+		accessLogFile, _ := os.Create("./storage/logs/access.log")
+		gin.DefaultWriter = io.MultiWriter(accessLogFile, os.Stdout)
+
+		errorLogFile, _ := os.Create("./storage/logs/errors.log")
+		gin.DefaultErrorWriter = io.MultiWriter(errorLogFile, os.Stdout)
+	}
+
+	if !appconfig.Instance.AppDebug {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
 	appEngine = gin.Default()
 
 	docs.SwaggerInfo.BasePath = appEngine.BasePath()
-	docs.SwaggerInfo.Title = appconfigs.Instance.AppName
-	docs.SwaggerInfo.Description = fmt.Sprintf("%s API Spec", appconfigs.Instance.AppName)
-	docs.SwaggerInfo.Version = appconfigs.Instance.AppVersion
-	docs.SwaggerInfo.Host = appconfigs.Instance.AppURL
+	docs.SwaggerInfo.Title = appconfig.Instance.AppName
+	docs.SwaggerInfo.Description = fmt.Sprintf("%s API Spec", appconfig.Instance.AppName)
+	docs.SwaggerInfo.Version = appconfig.Instance.AppVersion
+	docs.SwaggerInfo.Host = appconfig.Instance.AppURL
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 }
 
 func main() {
 	appEngine.GET("/", func(context *gin.Context) {
-		context.Redirect(http.StatusPermanentRedirect, "/ns")
+		context.Redirect(http.StatusPermanentRedirect, "/home")
 	})
 
-	appEngine.StaticFS("/ns",
+	appEngine.StaticFS("/home",
 		http.FS(resources.Resource))
 
 	appEngine.GET("/docs/*any",
 		ginSwagger.WrapHandler(swaggerFiles.Handler,
 			ginSwagger.DefaultModelsExpandDepth(
-				appconsts.GinModelsDepth)))
+				appconstant.GinModelsDepth)))
 
 	internal.NewAPIProvider(ctx, appEngine)
 
-	log.Fatal(appEngine.Run(appconfigs.Instance.AppURL))
+	log.Fatal(appEngine.Run(appconfig.Instance.AppURL))
 }

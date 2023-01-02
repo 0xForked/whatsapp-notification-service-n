@@ -1,7 +1,6 @@
-# WhatsApp Notification Service with Golang
+# WhatsApp Notification Service
 
-`gowa` Implements the WhatsApp Web API using [Gin Gonic](https://github.com/gin-gonic/gin) web framework,
-and also [Gin Swagger](https://github.com/swaggo/gin-swagger) to generate Swagger Documentation (2.0).
+`Gowans` Implement the WhatsApp Web API powered by [rhymen/go-whatsapp](https://github.com/Rhymen/go-whatsapp).
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on docker container and on your local machine.
@@ -33,18 +32,10 @@ $ make stop
 
 ### Running On Local Machine
 Below is the instructions to run this project on your local machine:
-1. Open new `terminal`.
-2. Set `run.sh` file permission.
-```bash
-$ chmod +x ./run.sh
-```
-4. Run application from terminal by using following command:
-```bash
-$ ./run.sh
-```
+
 
 ### API Access
-Go to your API Docs page: [127.0.0.1:8080/docs/index.html](http://127.0.0.1:8080/swagger/index.html)
+Go to your API Docs page: []()
 
 ### Important
 

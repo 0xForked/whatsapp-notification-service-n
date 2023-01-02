@@ -1,7 +1,7 @@
-package appconfigs_test
+package appconfig_test
 
 import (
-	"github.com/aasumitro/gowa/pkg/appconfigs"
+	"github.com/aasumitro/gowa/pkg/appconfig"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -11,7 +11,7 @@ func TestAppConfig(t *testing.T) {
 	viper.Reset()
 	viper.SetConfigFile("../../.example.env")
 	viper.SetConfigType("dotenv")
-	appconfigs.LoadEnv()
+	appconfig.LoadEnv()
 
 	tt := []struct {
 		name     string
@@ -21,38 +21,38 @@ func TestAppConfig(t *testing.T) {
 	}{
 		{
 			name:     "Test AppName Env",
-			value:    appconfigs.Instance.AppName,
+			value:    appconfig.Instance.AppName,
+			expected: "Gowans",
+		},
+		{
+			name:     "Test AppSessionPath Env",
+			value:    appconfig.Instance.AppDescription,
 			expected: "Whatsapp Notification Service",
 		},
 		{
 			name:     "Test AppVersion Env",
-			value:    appconfigs.Instance.AppVersion,
+			value:    appconfig.Instance.AppVersion,
 			expected: "0.0.1-dev",
 		},
 		{
 			name:     "Test AppUrl Env",
-			value:    appconfigs.Instance.AppURL,
+			value:    appconfig.Instance.AppURL,
 			expected: "localhost:8000",
 		},
 		{
-			name:     "Test AppSessionPath Env",
-			value:    appconfigs.Instance.AppSessionPath,
-			expected: "./storage/sessions",
-		},
-		{
 			name:     "Test AppUploadPath Env",
-			value:    appconfigs.Instance.AppUploadPath,
+			value:    appconfig.Instance.AppUploadPath,
 			expected: "./storage/uploads",
 		},
 		{
 			name:     "Test AppReadTimeout Env",
-			value:    appconfigs.Instance.AppReadTimeout,
+			value:    appconfig.Instance.AppReadTimeout,
 			expected: 10,
 		},
 		{
 			name:     "Test AppReadTimeout Env",
-			value:    appconfigs.Instance.AppUploadLimit,
-			expected: 1,
+			value:    appconfig.Instance.AppUploadLimit,
+			expected: 1024,
 		},
 		{
 			name:     "TestUpdateEnv Function",
@@ -68,15 +68,15 @@ func TestAppConfig(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			switch test.expected {
 			case "UPDATE_SUCCESS":
-				initialValue := appconfigs.Instance.AppDebug
-				appconfigs.Instance.UpdateEnv("APP_DEBUG", !initialValue)
-				assert.Equal(t, appconfigs.Instance.AppDebug, false)
-				appconfigs.Instance.UpdateEnv("APP_DEBUG", initialValue)
+				initialValue := appconfig.Instance.AppDebug
+				appconfig.Instance.UpdateEnv("APP_DEBUG", !initialValue)
+				assert.Equal(t, appconfig.Instance.AppDebug, true)
+				appconfig.Instance.UpdateEnv("APP_DEBUG", initialValue)
 			case "UPDATE_ERROR":
 				viper.Reset()
-				initialValue := appconfigs.Instance.AppDebug
-				appconfigs.Instance.UpdateEnv("APP_DEBUG", !initialValue)
-				assert.Equal(t, appconfigs.Instance.AppDebug, initialValue)
+				initialValue := appconfig.Instance.AppDebug
+				appconfig.Instance.UpdateEnv("APP_DEBUG", !initialValue)
+				assert.Equal(t, appconfig.Instance.AppDebug, initialValue)
 			default:
 				assert.Equal(t, test.expected, test.value)
 			}

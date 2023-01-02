@@ -7,12 +7,50 @@
         <title>Whatsapp Notification Service</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
-        <main id="container">
-            <h1 class="text-3xl font-bold underline">
-                Hello world!
-            </h1>
-            <div id="events"></div>
+    <body class="w-min-full h-min-full">
+        <main class="container mx-auto">
+            <!-- LOADER -->
+            <section id="loader-section" class="flex items-center justify-center h-screen">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                loading please wait . . .
+            </section>
+            <section id="main-section" class="flex flex-col items-center justify-center h-screen hidden">
+                <!-- SECTION HEADER -->
+                <section class="flex flex-row items-center gap-2">
+                    <img
+                        class="w-24 h-24"
+                        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                        alt="logo"
+                    >
+                    <h1 class="text-4xl">
+                        <span class="italic font-semibold text-5xl">WhatsApp</span>
+                        <br><span class="font-bold text-[1.45rem] tracking-wide	">Notification Service</span>
+                    </h1>
+                </section>
+
+                <section>
+                    <!-- TODO IMPL UI: QRCODE(login), Profile(logged-in), Logs(action) -->
+                </section>
+
+                <!-- FOOTER -->
+                <section class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 items-center">
+                    <div class="flex flex-row gap-2">
+                        [<a href="https://github.com/aasumitro/whatsapp-notification-service" target="_blank" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">Source Code</a>]
+                        [<!--suppress HtmlUnknownTarget -->
+                        <a href="/docs/index.html" target="_blank" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">API Spec</a>]
+                        [<a href="https://github.com/aasumitro/whatsapp-notification-service/wiki" target="_blank" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">Docs</a>]
+                        [<a href="https://github.com/aasumitro/whatsapp-notification-channel" target="_blank" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">Laravel Library</a>]
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <p class="font-bold">Gowans</p> —
+                        <p class="font-medium italic">API Powered by</p>
+                        <a href="https://github.com/Rhymen/go-whatsapp" target="_blank" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">rhymen/go-whatsapp</a>
+                    </div>
+                </section>
+            </section>
         </main>
         <script src="./index.js"></script>
     </body>
