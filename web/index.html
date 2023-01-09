@@ -31,8 +31,11 @@
                     </h1>
                 </section>
 
-                <section>
+                <section id="content-container">
                     <!-- TODO IMPL UI: QRCODE(login), Profile(logged-in), Logs(action) -->
+                    <div id="qrcode" class="mt-5 hidden text-center"></div>
+                    <div id="status" class="mt-5 text-center"></div>
+                    <div id="logs" class="mt-5 rounded-lg border-2 border-solid border-gray-200 divide-x divide-solid overflow-y-auto w-96 h-60 p-4"></div>
                 </section>
 
                 <!-- FOOTER -->
@@ -52,6 +55,7 @@
                 </section>
             </section>
         </main>
+        <script src="./qrcode.min.js"></script>
         <script src="./index.js"></script>
     </body>
 </html>

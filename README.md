@@ -47,9 +47,10 @@ receiver is on your contacts list.
 
 - [ ] Refactor
 - [ ] Tests
-- [ ] Impl Data Store
 - [ ] Impl Auto-reply Bot
 - [ ] Improve Handler
 - [ ] Improve Service
 - [ ] Impl Tracing, Logging, etc.
 - [ ] Events handling
+  - [ ] Message Forwarding 
+  - [ ] Message for Bot with GPT
