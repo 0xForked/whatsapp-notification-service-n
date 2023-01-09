@@ -35,7 +35,7 @@ build: swag
 	@ mkdir ./bin/build/db
 	@ cp ./db/fresh.db ./bin/build/db/local-data.db && cp .example.env ./bin/build/.env
 	@ go mod tidy -compat=1.19
-	@ go build -o ./build/pokewar ./cmd/web/main.go
+	@ go build -o ./build/gowans ./cmd/app/main.go
 	@ echo "generate binary done!"
 
 swag: tests
@@ -63,9 +63,24 @@ run:
 	go mod tidy -compat=1.19
 	go run ./cmd/app/main.go
 
+run-air:
+	@echo "Run App"
+	go mod tidy -compat=1.19
+	air ./cmd/app/main.go
+
 prepare:
 	go mod install
 	cp .example.env .env
+
+migrate-up:
+	@ echo "run migration up"
+	@ go run ./cmd/cli/main.go migrate up
+	@ echo "run migration up done"
+
+migrate-down:
+	@ echo "run migration down"
+	@ go run ./cmd/cli/main.go migrate down
+	@ echo "run migration down done"
 
 serve:
 	 http-server ./resources
