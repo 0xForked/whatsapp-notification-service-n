@@ -85,5 +85,5 @@ func main() {
 
 	internal.NewAPIProvider(ctx, appEngine, whatsappClient)
 
-	log.Fatal(appEngine.Run(configs.Instance.AppURL))
+	log.Panic(appEngine.Run(configs.Instance.AppURL))
 }

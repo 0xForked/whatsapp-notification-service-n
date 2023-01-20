@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/aasumitro/gowa/configs"
-	"github.com/golang/protobuf/proto"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
+	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
+	"google.golang.org/protobuf/proto"
+	"runtime"
 	"sync"
 )
 
@@ -26,13 +28,16 @@ type (
 )
 
 func (c *Client) MakeConnection() *Client {
-	container := sqlstore.NewWithDB(configs.DbPool, "sqlite3", nil)
+	container := sqlstore.NewWithDB(configs.DbPool, configs.Instance.DBDriver, nil)
 	device, err := container.GetFirstDevice()
 	if err != nil {
 		panic(fmt.Sprintf("WHATSAPPMEOW_ERROR: %s", err.Error()))
 	}
 
 	wacSingleton.Do(func() {
+		store.DeviceProps.Os = proto.String(fmt.Sprintf("%s (%s)",
+			configs.Instance.AppName, runtime.GOOS))
+		store.DeviceProps.PlatformType = waProto.DeviceProps_DESKTOP.Enum()
 		c.WAC = whatsmeow.NewClient(device, nil)
 		if c.WAC.Store.ID != nil {
 			if err := c.WAC.Connect(); err != nil {

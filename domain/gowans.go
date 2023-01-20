@@ -1,7 +1,6 @@
 package domain
 
-type (
-	IGowansService interface {
-		// TODO
-	}
-)
+type TextMessage struct {
+	Msisdn string `json:"msisdn" form:"msisdn"`
+	Text   string `json:"text" form:"text"`
+}

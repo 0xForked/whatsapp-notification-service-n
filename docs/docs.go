@@ -10,93 +10,23 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "@developer.gowa",
+            "name": "@aasumitro",
             "url": "https://aasumitro.id/",
             "email": "hello@aasumitro.id"
         },
         "license": {
             "name": "MIT",
-            "url": "https://github.com/aasumitro/gowa/blob/master/LICENSE"
+            "url": "https://github.com/aasumitro/whatsapp-notification-service/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/whatsapp/login": {
-            "post": {
-                "description": "Get logged in to account",
-                "produces": [
-                    "application/json",
-                    "text/html"
-                ],
-                "tags": [
-                    "Whatsapp Account"
-                ],
-                "summary": "login handler",
-                "responses": {
-                    "201": {
-                        "description": "success respond application/json",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/whatsapp/logout": {
             "post": {
-                "description": "Logout from whatsapp web.",
+                "description": "Logged Out Current Authenticate Account",
                 "consumes": [
                     "application/json"
                 ],
@@ -104,351 +34,28 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Whatsapp Account"
+                    "Whatsapp"
                 ],
-                "summary": "Logout",
+                "summary": "Account Logout",
                 "responses": {
-                    "200": {
-                        "description": "success respond",
+                    "401": {
+                        "description": "UNAUTHORIZED RESPOND",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.ErrorRespond"
                         }
                     },
                     "500": {
-                        "description": "internal server error respond",
+                        "description": "INTERNAL SERVER ERROR RESPOND",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.ErrorRespond"
                         }
                     }
                 }
             }
         },
-        "/api/v1/whatsapp/profile": {
-            "get": {
-                "description": "Get logged in account profile",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Whatsapp Account"
-                ],
-                "summary": "current connected account",
-                "responses": {
-                    "200": {
-                        "description": "success respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/whatsapp/send-audio": {
+        "/api/v1/whatsapp/message": {
             "post": {
-                "description": "send audio via whatsapp message",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Whatsapp Messaging"
-                ],
-                "summary": "send audio message",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
-                        "name": "msisdn",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Audio. with extension: mp3,aac,m4a,amr,opus, with min length: 1024mb",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "422": {
-                        "description": "unprocessable entity respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpValidationErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/whatsapp/send-document": {
-            "post": {
-                "description": "send document via whatsapp message",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Whatsapp Messaging"
-                ],
-                "summary": "send document message",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
-                        "name": "msisdn",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Document. with extension: any, with min length: 1024mb",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "422": {
-                        "description": "unprocessable entity respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpValidationErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/whatsapp/send-image": {
-            "post": {
-                "description": "send image via whatsapp message",
+                "description": "Send Text Message to Specified Receipant",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -456,237 +63,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Whatsapp Messaging"
+                    "Whatsapp"
                 ],
-                "summary": "send image message",
+                "summary": "Send Text Message",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
-                        "name": "msisdn",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Image. with extension: jpg,jpeg,png, with min length: 1024mb",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "422": {
-                        "description": "unprocessable entity respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpValidationErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/whatsapp/send-location": {
-            "post": {
-                "description": "send location via whatsapp message",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Whatsapp Messaging"
-                ],
-                "summary": "send location message",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
-                        "name": "msisdn",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Latitude. e.g: 1.XXX",
-                        "name": "latitude",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Longitude. e.g: 124.XXX",
-                        "name": "longitude",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "422": {
-                        "description": "unprocessable entity respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpValidationErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "internal server error respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/whatsapp/send-text": {
-            "post": {
-                "description": "Send text via whatsapp message.",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Whatsapp Messaging"
-                ],
-                "summary": "send text message",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "description": "destination number. eg: 6281255423",
                         "name": "msisdn",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Message text",
+                        "description": "message text",
                         "name": "text",
                         "in": "formData",
                         "required": true
@@ -694,75 +84,56 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "success respond",
+                        "description": "BASIC RESPOND",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpSuccessRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "bad request respond",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.SuccessRespond"
                         }
                     },
                     "422": {
-                        "description": "unprocessable entity respond",
+                        "description": "UNPROCESSABLE ENTITY RESPOND",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpValidationErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.ErrorRespond"
                         }
                     },
                     "500": {
-                        "description": "internal server error respond",
+                        "description": "INTERNAL SERVER ERROR RESPOND",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/delivery.HttpServerErrorRespond"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/whatsapp/status": {
+            "get": {
+                "description": "Get Current Account Authentication Status.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Whatsapp"
+                ],
+                "summary": "Account Status",
+                "responses": {
+                    "200": {
+                        "description": "BASIC RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.SuccessRespond"
+                        }
+                    },
+                    "201": {
+                        "description": "QR RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.SuccessRespond"
+                        }
+                    },
+                    "500": {
+                        "description": "INTERNAL SERVER ERROR RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
                         }
                     }
                 }
@@ -770,63 +141,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "delivery.HttpErrorRespond": {
+        "utils.ErrorRespond": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer",
-                    "example": 400
+                    "type": "integer"
                 },
                 "data": {
                     "type": "string"
                 },
                 "status": {
-                    "type": "string",
-                    "example": "Bad Request"
-                }
-            }
-        },
-        "delivery.HttpServerErrorRespond": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 500
-                },
-                "data": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "Internal Server Error"
                 }
             }
         },
-        "delivery.HttpSuccessRespond": {
+        "utils.SuccessRespond": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer",
-                    "example": 200
+                    "type": "integer"
                 },
                 "data": {},
                 "status": {
-                    "type": "string",
-                    "example": "OK"
-                }
-            }
-        },
-        "delivery.HttpValidationErrorRespond": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 422
-                },
-                "data": {},
-                "status": {
-                    "type": "string",
-                    "example": "Unprocessable Entity"
+                    "type": "string"
                 }
             }
         }
@@ -835,12 +172,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "",
 	Host:             "",
-	BasePath:         "/api/v1",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "WhatsApp Web API with Golang",
-	Description:      "Golang, Gin, Whatsapp Web API and Swagger.",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

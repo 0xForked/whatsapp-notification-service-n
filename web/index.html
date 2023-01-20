@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="icon" type="image/svg+xml" href="./whatsapp.svg" />
         <title>Whatsapp Notification Service</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
@@ -22,7 +23,7 @@
                 <section class="flex flex-row items-center gap-2">
                     <img
                         class="w-24 h-24"
-                        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                        src="./whatsapp.svg"
                         alt="logo"
                     >
                     <h1 class="text-4xl">
@@ -33,9 +34,15 @@
 
                 <section id="content-container">
                     <!-- TODO IMPL UI: QRCODE(login), Profile(logged-in), Logs(action) -->
-                    <div id="qrcode" class="mt-5 hidden text-center"></div>
-                    <div id="status" class="mt-5 text-center"></div>
-                    <div id="logs" class="mt-5 rounded-lg border-2 border-solid border-gray-200 divide-x divide-solid overflow-y-auto w-96 h-60 p-4"></div>
+                    <div id="qrcode" class="mt-5 text-center hidden"></div>
+                    <div id="status" class="flex flex-row justify-center gap-2 mt-4 hidden">
+                        <p id="account"></p> -
+                        [<a onclick="sendEvent('logout')" class="font-bold cursor-pointer tracking-tighter text-black border-b-2 border-red-200 hover:border-red-400 dark:text-gray-300">Logout</a>]
+                    </div>
+                    <div id="logs" class="mt-5 rounded-lg border-2 border-solid border-gray-200 divide-x divide-solid overflow-y-auto w-96 h-60 p-4 hidden">
+                        <h5 class="font-bold text-lg mb-4">Message Logs</h5>
+                        <div id="message"></div>
+                    </div>
                 </section>
 
                 <!-- FOOTER -->

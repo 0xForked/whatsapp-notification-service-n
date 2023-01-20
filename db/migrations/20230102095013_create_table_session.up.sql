@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS sessions
-(
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    raw TEXT NOT NULL,
-    created_at INT NOT NULL,
-    deleted_at INT
-)

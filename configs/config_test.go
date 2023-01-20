@@ -7,6 +7,20 @@ import (
 	"testing"
 )
 
+func TestAppConfig_InitDbConnShouldErrorOpen(t *testing.T) {
+	t.Skip()
+	viper.Reset()
+	viper.SetConfigFile("../.example.env")
+	viper.SetConfigType("dotenv")
+	configs.LoadEnv()
+	configs.DbPool = nil
+	configs.Instance.DBDsnURL = "lorem.db"
+	configs.Instance.DBDriver = "lorem"
+	assert.Panics(t, func() {
+		configs.Instance.InitDbConn()
+	})
+}
+
 func TestAppConfig(t *testing.T) {
 	viper.Reset()
 	viper.SetConfigFile("../.example.env")
@@ -57,11 +71,20 @@ func TestAppConfig(t *testing.T) {
 			name:     "TestUpdateEnv Function ShouldError ReadWrite",
 			expected: "UPDATE_ERROR",
 		},
+		{
+			name:     "TestInitDBConn",
+			expected: "DB_CONN",
+		},
 	}
 
 	for _, test := range tt {
 		t.Run(test.name, func(t *testing.T) {
 			switch test.expected {
+			case "DB_CONN":
+				configs.Instance.DBDsnURL = "../db/local-data.db"
+				configs.Instance.DBDriver = "sqlite3"
+				configs.Instance.InitDbConn()
+				assert.NotEqual(t, configs.DbPool, nil)
 			case "UPDATE_SUCCESS":
 				initialValue := configs.Instance.AppDebug
 				configs.Instance.UpdateEnv("APP_DEBUG", !initialValue)

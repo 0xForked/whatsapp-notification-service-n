@@ -63,7 +63,7 @@ run:
 	go mod tidy -compat=1.19
 	go run ./cmd/app/main.go
 
-run-air:
+run-watch:
 	@echo "Run App"
 	go mod tidy -compat=1.19
 	air ./cmd/app/main.go

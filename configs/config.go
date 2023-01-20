@@ -22,6 +22,8 @@ type AppConfig struct {
 	AppUploadLimit int    `mapstructure:"APP_UPLOAD_LIMIT"`
 	DBDriver       string `mapstructure:"DB_DRIVER"`
 	DBDsnURL       string `mapstructure:"DB_DSN_URL"`
+	Gpt3APIKey     string `mapstructure:"GPT_API_KEY"`
+	BotReqMSISDN   string `mapstructure:"BOT_REQ_MSISDN"`
 }
 
 var (
