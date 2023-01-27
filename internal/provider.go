@@ -31,6 +31,7 @@ func NewAPIProvider(ctx context.Context, router *gin.Engine, whatsappClient *wha
 			tmpl := strings.ToLower(v.Message.GetConversation())
 			contains := utils.InArray(strings.Trim(tmpl[:4], " "),
 				[]string{"#bot", "@bot", "bot"})
+			fmt.Println(contains)
 			match := v.Info.Sender.User == configs.Instance.BotReqMSISDN
 			if contains && match {
 				if err := gptBot.CompletionStreamWithEngine(ctx, gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
@@ -44,6 +45,8 @@ func NewAPIProvider(ctx context.Context, router *gin.Engine, whatsappClient *wha
 						_, _ = whatsappClient.SendMessage(ctx,
 							v.Info.Sender.User, strings.Join(data[2:], ""))
 					}
+
+					fmt.Println(data)
 				}); err == nil {
 					_, _ = whatsappClient.SendMessage(ctx,
 						v.Info.Sender.User, fmt.Sprintf(
@@ -52,7 +55,7 @@ func NewAPIProvider(ctx context.Context, router *gin.Engine, whatsappClient *wha
 				}
 			}
 
-			if v.Info.Sender.User != configs.Instance.BotReqMSISDN {
+			if v.Info.Sender.User != configs.Instance.BotReqMSISDN && !v.Info.IsFromMe {
 				_, _ = whatsappClient.SendMessage(context.Background(),
 					configs.Instance.BotReqMSISDN, fmt.Sprintf(
 						"[%s] new message from %s (%s) - [%s]",
