@@ -13,7 +13,7 @@ require (
 	github.com/stretchr/testify v1.8.3
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
-	github.com/swaggo/swag v1.16.1
+	github.com/swaggo/swag v1.16.3
 	go.mau.fi/whatsmeow v0.0.0-20230104001256-9d98dc9b5702
 	google.golang.org/protobuf v1.30.0
 )
@@ -57,10 +57,10 @@ require (
 	github.com/ugorji/go/codec v1.2.9 // indirect
 	go.mau.fi/libsignal v0.1.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
