@@ -3,7 +3,7 @@ module github.com/aasumitro/gowa
 go 1.19
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/PullRequestInc/go-gpt3 v1.1.15
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.0
